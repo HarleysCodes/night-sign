@@ -7,7 +7,6 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { verifyWithDisclosure, VerificationResult, ZKProof } from "../managed/docusign";
 import { sha256 } from "../lib/utils";
-import logo from '../assets/IMG_8337-Photoroom.png'; // Make sure this path is correct!
 
 interface VerifyState {
   status: "idle" | "verifying" | "verified" | "error";
@@ -94,7 +93,7 @@ export function VerifySignature() {
       {/* Premium Navbar */}
       <nav className="w-full flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-white/5 backdrop-blur-md border-b border-slate-200 dark:border-white/10 transition-colors duration-300 sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
-          <img src={logo} alt="NightSign" className="h-14 -ml-3 dark:invert drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all" />
+          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all" />
         </div>
         <div className="flex gap-6 items-center">
           <button onClick={() => window.location.href='/'} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium">Sign Document</button>
