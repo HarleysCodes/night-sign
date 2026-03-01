@@ -172,7 +172,7 @@ function App() {
   // Simple URL parsing
   const params = new URLSearchParams(window.location.search);
   const urlDocId = params.get("doc_id");
-  const effectiveIndex = parseInt(params.get("count") || "0", 10);
+  const currentSignerCount = parseInt(params.get("count") || "0", 10);
 
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
@@ -227,7 +227,7 @@ function App() {
         docId,
         documentHash: "",
         documentName: "Shared Document",
-        signers: Array(effectiveIndex).fill('prev-signer'),
+        signers: Array(currentSignerCount).fill('prev-signer'),
         requiredSigners: req,
         isSecondSigner: true
       });
@@ -395,7 +395,7 @@ function App() {
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
               {state === "second-sign" && (
                 <motion.div key="second" className="text-center p-8 text-white">
-                  <h2 className="text-xl font-bold mb-4">Signer {effectiveIndex + 1} / {multiSignerSession?.requiredSigners}</h2>
+                  <h2 className="text-xl font-bold mb-4">Signer {currentSignerCount + 1} / {multiSignerSession?.requiredSigners}</h2>
                   {isFetchingDoc && (
                     <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                       <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
