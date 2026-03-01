@@ -167,6 +167,7 @@ function App() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentRole, setCurrentRole] = useState("Signer");
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [isFetchingDoc, setIsFetchingDoc] = useState(false);
   
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
@@ -190,15 +191,20 @@ function App() {
     const fileName = searchParams.get('fname');
     
     const handleIPFS = async () => {
+      setIsFetchingDoc(true);
       if (ipfsCid && sessionKey && fileName) {
         setState("proving"); // Use proving as loading state
         try {
           const encryptedBlob = await fetchFromIPFS(ipfsCid);
           const decryptedFile = await decryptFile(encryptedBlob, sessionKey, decodeURIComponent(fileName));
-          setSelectedFile(decryptedFile);
-          setAutoLoaded(true);
+          setTimeout(() => {
+            setSelectedFile(decryptedFile);
+            setAutoLoaded(true);
+            setIsFetchingDoc(false);
+          }, 100);
         } catch (err) {
           console.error("Failed to fetch/decrypt file:", err);
+          setIsFetchingDoc(false);
         }
         setState("second-sign");
       }
@@ -384,6 +390,18 @@ function App() {
               {state === "second-sign" && (
                 <motion.div key="second" className="text-center p-8 text-white">
                   <h2 className="text-xl font-bold mb-4">Signer {multiSignerSession?.signers.length ? multiSignerSession.signers.length + 1 : 2} / {multiSignerSession?.requiredSigners}</h2>
+                  {isFetchingDoc && (
+                    <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
+                      <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
+                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span className="font-medium">🔓 Decrypting Private Document...</span>
+                      </div>
+                      <p className="text-xs text-white/40">Fetching from IPFS and decrypting</p>
+                    </div>
+                  )}
                   {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <>
                     <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={handleSign} className="neon-button w-full">Append Signature</button>
