@@ -895,42 +895,56 @@ function App() {
                   key="second-sign"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="glass-card p-6"
+                  className="glass-card p-8 text-center"
                 >
-                  <div className="text-center mb-6">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-4">
-                      <svg className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                  {/* Big Purple Banner */}
+                  <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-500/30">
+                    <div className="flex items-center justify-center gap-3 mb-3">
+                      <svg className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                      <span className="text-sm text-purple-400">Second Signer Session</span>
+                      <span className="text-xl font-bold text-white">Welcome Signer 2!</span>
                     </div>
-                    <h3 className="text-xl font-semibold text-white">
-                      Join as Second Signer
-                    </h3>
-                    <p className="text-sm text-white/50 mt-2">
-                      You're signing an existing document vault. Your signature will be appended to complete the agreement.
+                    <p className="text-purple-300">
+                      You are joining a secure Midnight session
+                    </p>
+                    <p className="text-xs text-white/40 mt-2 font-mono">
+                      Session: {multiSignerSession?.docId}
                     </p>
                   </div>
                   
+                  {/* Show upload OR file info */}
                   {!selectedFile ? (
-                    <FileDropzone 
-                      onFileSelect={handleFileSelect} 
-                      isDragging={isDragging}
-                    />
+                    <div className="mb-6">
+                      <p className="text-white/50 mb-4">Upload the document to sign:</p>
+                      <FileDropzone 
+                        onFileSelect={handleFileSelect} 
+                        isDragging={isDragging}
+                      />
+                    </div>
                   ) : (
-                    <div className="text-center py-4">
+                    <div className="mb-6 p-4 rounded-xl bg-black/20">
                       <p className="text-white font-medium">{selectedFile.name}</p>
-                      <p className="text-sm text-white/40 mt-1">
+                      <p className="text-sm text-white/40">
                         {(selectedFile.size / 1024).toFixed(1)} KB
                       </p>
                       <button
                         onClick={() => setSelectedFile(null)}
-                        className="mt-4 text-sm text-cyan-400 hover:text-cyan-300"
+                        className="mt-2 text-sm text-cyan-400 hover:text-cyan-300"
                       >
                         Change file
                       </button>
                     </div>
                   )}
+                  
+                  {/* Sign Button */}
+                  <button
+                    onClick={handleSign}
+                    disabled={!selectedFile}
+                    className="w-full neon-button py-4 text-lg"
+                  >
+                    Append Your Signature
+                  </button>
                 </motion.div>
               )}
 

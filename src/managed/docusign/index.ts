@@ -239,7 +239,8 @@ export function decodeKey(data: Uint8Array): string {
 
 // Generate invite link for multi-signer
 export function generateInviteLink(docId: string, baseUrl: string = window.location.origin): string {
-  return `${baseUrl}/sign/${docId}`;
+  // Use root path with query param for second signer
+  return `${baseUrl}/?doc_id=${docId}`;
 }
 
 // Parse invite link
