@@ -61,24 +61,24 @@ function Navbar({
   onClearError: () => void;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-midnight-950/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/30">
-            <span className="text-cyan-400 font-bold text-xs">NS</span>
-          </div>
-          <span className="text-lg font-bold tracking-tight">
-            Night<span className="text-cyan-400">Sign</span>
-          </span>
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <img 
+            src="/logo.png" 
+            alt="NightSign" 
+            className="h-10 w-auto"
+            style={{ height: '40px' }}
+          />
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* Verify Link */}
           <a 
             href="/verify" 
-            className="text-sm text-white/60 hover:text-cyan-400 transition-colors"
+            className="text-sm text-white/50 hover:text-cyan-400 transition-colors font-medium"
           >
-            Verify a Document
+            Verify
           </a>
           {/* Error toast */}
           {error && (
@@ -407,6 +407,55 @@ on the Midnight blockchain network.
         </div>
       )}
     </motion.div>
+  );
+}
+
+// Trust Timeline - Vertical Step Indicator
+function TrustTimeline({ 
+  currentStep 
+}: { 
+  currentStep: 0 | 1 | 2 | 3;
+}) {
+  const steps = [
+    { step: 1, label: "Document Anchored", desc: "Hash recorded on-chain" },
+    { step: 2, label: "Primary Signature", desc: "First party verified" },
+    { step: 3, label: "Counterparty Verified", desc: "All parties signed" },
+  ];
+
+  return (
+    <div className="flex items-center justify-center gap-2 py-4">
+      {steps.map((s, i) => (
+        <div key={s.step} className="flex items-center">
+          <div className="flex flex-col items-center">
+            <div className={`
+              w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500
+              ${currentStep >= s.step 
+                ? 'bg-gradient-to-br from-cyan-500 to-purple-600 border-cyan-400 shadow-lg shadow-cyan-500/25' 
+                : 'bg-white/5 border-white/20'}
+            `}>
+              {currentStep >= s.step ? (
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <span className="text-white/40 font-bold">{s.step}</span>
+              )}
+            </div>
+            <div className="mt-2 text-center">
+              <p className={`text-xs font-medium ${currentStep >= s.step ? 'text-white' : 'text-white/40'}`}>
+                {s.label}
+              </p>
+            </div>
+          </div>
+          {i < steps.length - 1 && (
+            <div className={`
+              w-12 h-0.5 mx-2 mt-[-20px] transition-all duration-500
+              ${currentStep > s.step ? 'bg-gradient-to-r from-cyan-500 to-purple-500' : 'bg-white/10'}
+            `} />
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -764,6 +813,9 @@ function App() {
             </div>
           )}
 
+          {/* Trust Timeline */}
+          <TrustTimeline currentStep={signedData?.isFullyExecuted ? 3 : state === "signed" ? 2 : selectedFile ? 1 : 0} />
+
           {/* Main Card */}
           <motion.div
             layout
@@ -971,7 +1023,13 @@ function App() {
                   exit={{ opacity: 0 }}
                 >
                   {signedData?.isFullyExecuted ? (
-                    <AgreementCertificate data={signedData} onReset={handleReset} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      <AgreementCertificate data={signedData} onReset={handleReset} />
+                    </motion.div>
                   ) : (
                     <SignedView 
                       data={signedData} 
