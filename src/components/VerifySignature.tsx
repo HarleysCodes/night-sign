@@ -134,8 +134,7 @@ export function VerifySignature() {
           <img 
             src="/logo.png" 
             alt="NightSign" 
-            className="h-14 -ml-3"
-            style={{ filter: 'brightness(0) invert(1)' }}
+            className="h-14 -ml-3 dark:invert"
           />
         </div>
         <div className="flex gap-6 items-center">
