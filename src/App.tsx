@@ -10,6 +10,8 @@ import { AgreementCertificate } from "./components/AgreementCertificate";
 // Types
 type AppState = "upload" | "identity-check" | "proving" | "signed" | "second-sign";
 
+interface SignerInfo { address: string; role: string; }
+
 interface SignedDocument {
   documentHash: string;
   documentName: string;
@@ -18,6 +20,7 @@ interface SignedDocument {
   timestamp: number;
   docId: string;
   signatureCount: number;
+  signersList?: SignerInfo[];
   isFullyExecuted?: boolean;
 }
 
@@ -209,7 +212,8 @@ function App() {
       const docId = `doc_${Date.now()}_${randomHex(8)}`;
       await createProof(documentHash, accountId || "", docId);
       
-      setMultiSignerSession({ docId, documentHash, documentName: selectedFile.name, signers: [accountId || "signer-1"], requiredSigners });
+      setMultiSignerSession({ docId, documentHash, documentName: selectedFile.name, signers: [accountId || "signer-1"],
+        signersList: [{ address: accountId || "zk", role: "Signer 1" }], requiredSigners });
       
       // FIRST INVITE LINK LOGIC
       const baseLink = generateInviteLink(docId);
