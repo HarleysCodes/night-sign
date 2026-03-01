@@ -381,7 +381,7 @@ function App() {
 
           <motion.div layout className="glass-card p-8" onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={(e) => { e.preventDefault(); setIsDragging(false); const file = e.dataTransfer.files[0]; if (file) setSelectedFile(file); }}>
             <AnimatePresence mode="wait">
-              {state === "upload" && (
+              {state === "upload" && currentSignerCount === 0 && (
                 <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                   {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
@@ -393,7 +393,7 @@ function App() {
               )}
               {state === "identity-check" && <motion.div key="id" className="text-center text-white p-8">Verifying VC Identity...</motion.div>}
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
-              {state === "second-sign" && (
+              {currentSignerCount > 0 || state === "second-sign" && (
                 <motion.div key="second" className="text-center p-8 text-white">
                   <h2 className="text-xl font-bold mb-4">Signer {currentSignerCount + 1} / {multiSignerSession?.requiredSigners}</h2>
                   {isFetchingDoc && (
