@@ -164,6 +164,7 @@ function App() {
   const [multiSignerSession, setMultiSignerSession] = useState<MultiSignerSession | null>(null);
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
+  const [currentRole, setCurrentRole] = useState("Signer");
   
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
@@ -213,7 +214,7 @@ function App() {
       await createProof(documentHash, accountId || "", docId);
       
       setMultiSignerSession({ docId, documentHash, documentName: selectedFile.name, signers: [accountId || "signer-1"],
-        signersList: [{ address: accountId || "zk", role: "Signer 1" }], requiredSigners });
+        signersList: [{ address: accountId || "zk", role: currentRole }], requiredSigners });
       
       // FIRST INVITE LINK LOGIC
       const baseLink = generateInviteLink(docId);
@@ -276,7 +277,7 @@ function App() {
         docId,
         signatureCount: newSignersList.length,
         isFullyExecuted: isComplete,
-        signersList: newSignersList.map((addr, idx) => ({ address: addr, role: "Signer " + (idx + 1) }))
+        signersList: newSignersList.map((addr, idx) => ({ address: addr, role: idx === newSignersList.length - 1 ? currentRole : "Signer " + (idx + 1) }))
       });
       setState("signed");
     } catch (error) { setState("second-sign"); }
@@ -333,7 +334,7 @@ function App() {
                   {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
                       <p className="text-lg font-medium text-white">{selectedFile.name}</p>
-                      <button onClick={handleSign} disabled={!canSign} className="neon-button w-full mt-4">Sign Document</button>
+                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={handleSign} disabled={!canSign} className="neon-button w-full mt-4">Sign Document</button>
                     </div>
                   )}
                 </motion.div>
@@ -344,7 +345,9 @@ function App() {
                 <motion.div key="second" className="text-center p-8 text-white">
                   <h2 className="text-xl font-bold mb-4">Signer {multiSignerSession?.signers.length ? multiSignerSession.signers.length + 1 : 2} / {multiSignerSession?.requiredSigners}</h2>
                   {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
-                    <button onClick={handleSign} className="neon-button w-full">Append Signature</button>
+                    <>
+                    <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={handleSign} className="neon-button w-full">Append Signature</button>
+                    </>
                   )}
                 </motion.div>
               )}
