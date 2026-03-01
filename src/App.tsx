@@ -50,7 +50,9 @@ function Navbar({
   isConnecting,
   error,
   networkId,
-  onClearError 
+  onClearError,
+  isDarkMode,
+  setIsDarkMode 
 }: { 
   onConnect: () => void; 
   isConnected: boolean; 
@@ -59,6 +61,8 @@ function Navbar({
   error: string | null;
   networkId: number | null;
   onClearError: () => void;
+  isDarkMode: boolean;
+  setIsDarkMode: (v: boolean) => void;
 }) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 bg-black/60 backdrop-blur-md">
@@ -76,6 +80,23 @@ function Navbar({
         </div>
         
         <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDarkMode ? (
+              <svg className="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
+          
           {/* Verify Link */}
           <a 
             href="/verify" 
@@ -227,13 +248,15 @@ function SignedView({
   onReset,
   inviteLink,
   onCopyLink,
-  copiedLink
+  copiedLink,
+  requiredSigners = 2
 }: { 
   data: SignedDocument; 
   onReset: () => void;
   inviteLink?: string;
   onCopyLink?: () => void;
   copiedLink?: boolean;
+  requiredSigners?: number;
 }) {
   
   const handleDownloadReceipt = () => {
@@ -348,11 +371,11 @@ on the Midnight blockchain network.
               <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
-                  style={{ width: `${Math.min((data.signatureCount / 2) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((data.signatureCount / requiredSigners) * 100, 100)}%` }}
                 />
               </div>
               <span className="text-sm text-cyan-400">
-                {data.signatureCount}/2
+                {data.signatureCount}/{requiredSigners}
               </span>
             </div>
           </div>
@@ -415,14 +438,19 @@ on the Midnight blockchain network.
 
 // Trust Timeline - Vertical Step Indicator
 function TrustTimeline({ 
-  currentStep 
+  currentStep,
+  requiredSigners = 2
 }: { 
-  currentStep: 0 | 1 | 2 | 3;
+  currentStep: number;
+  requiredSigners?: number;
 }) {
   const steps = [
     { step: 1, label: "Document Anchored", desc: "Hash recorded on-chain" },
-    { step: 2, label: "Primary Signature", desc: "First party verified" },
-    { step: 3, label: "Counterparty Verified", desc: "All parties signed" },
+    ...Array.from({ length: requiredSigners - 1 }, (_, i) => ({
+      step: i + 2,
+      label: i === requiredSigners - 2 ? "All Signers Verified" : `Signer ${i + 2}`,
+      desc: i === requiredSigners - 2 ? "All parties signed" : `Party ${i + 2} verified`
+    }))
   ];
 
   return (
@@ -479,6 +507,12 @@ function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [signedData, setSignedData] = useState<SignedDocument | null>(null);
   
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  // Signer count configuration
+  const [requiredSigners, setRequiredSigners] = useState(2);
+  
   // Multi-signer state
   const [multiSignerSession, setMultiSignerSession] = useState<MultiSignerSession | null>(null);
   const [, setIdentityVerified] = useState(false);
@@ -517,7 +551,7 @@ function App() {
         documentHash: "",
         documentName: "Shared Document",
         signers: [],
-        requiredSigners: 2,
+        requiredSigners: requiredSigners,
         isSecondSigner: true
       });
       
@@ -609,7 +643,7 @@ function App() {
         documentHash,
         documentName: selectedFile.name,
         signers: [accountId || "signer-1"],
-        requiredSigners: 2
+        requiredSigners: requiredSigners
       };
       setMultiSignerSession(session);
       
@@ -769,7 +803,7 @@ function App() {
   };
 
   return (
-    <div className="space-bg min-h-screen">
+    <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
       <Navbar 
         onConnect={connectWallet}
         isConnected={isConnected}
@@ -778,6 +812,8 @@ function App() {
         error={walletError}
         networkId={networkId}
         onClearError={clearWalletError}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
       />
       
       <main className="pt-28 pb-12">
@@ -816,8 +852,35 @@ function App() {
             </div>
           )}
 
+          {/* Signer Count Configuration */}
+          {state === "upload" && !selectedFile && (
+            <div className="mb-6 p-4 glass-card">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium text-white/70">Number of Signers Required</label>
+                <span className="text-2xl font-bold text-cyan-400">{requiredSigners}</span>
+              </div>
+              <input
+                type="range"
+                min="2"
+                max="5"
+                value={requiredSigners}
+                onChange={(e) => setRequiredSigners(parseInt(e.target.value))}
+                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              />
+              <div className="flex justify-between mt-2 text-xs text-white/30">
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+              </div>
+            </div>
+          )}
+
           {/* Trust Timeline */}
-          <TrustTimeline currentStep={signedData?.isFullyExecuted ? 3 : state === "signed" ? 2 : selectedFile ? 1 : 0} />
+          <TrustTimeline 
+            currentStep={signedData?.isFullyExecuted ? requiredSigners : state === "signed" ? Math.min(requiredSigners - 1, 2) : selectedFile ? 1 : 0}
+            requiredSigners={requiredSigners}
+          />
 
           {/* Main Card */}
           <motion.div
@@ -1040,6 +1103,7 @@ function App() {
                       inviteLink={inviteLink}
                       onCopyLink={handleCopyLink}
                       copiedLink={copiedLink}
+                      requiredSigners={requiredSigners}
                     />
                   )}
                 </motion.div>
