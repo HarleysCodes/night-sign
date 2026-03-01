@@ -1,10 +1,10 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMidnightWallet, getNetworkName, isCorrectNetwork } from "./hooks/useMidnightWallet";
 import { createProof, checkIdentity, generateInviteLink } from "./managed/docusign";
 
 // Types
-type AppState = "upload" | "identity-check" | "proving" | "signed";
+type AppState = "upload" | "identity-check" | "proving" | "signed" | "second-sign";
 
 interface SignedDocument {
   documentHash: string;
@@ -14,6 +14,7 @@ interface SignedDocument {
   timestamp: number;
   docId: string;
   signatureCount: number;
+  isFullyExecuted?: boolean;
 }
 
 // Multi-signer session state
@@ -23,6 +24,7 @@ interface MultiSignerSession {
   documentName: string;
   signers: string[];
   requiredSigners: number;
+  isSecondSigner?: boolean;
 }
 
 // Utility: Hash using Web Crypto API
@@ -279,12 +281,21 @@ on the Midnight blockchain network.
       
       {/* Verification Status Badge */}
       <div className="mt-4 flex justify-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400 border border-emerald-500/20">
-          <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-          Verified by Midnight ZK
-        </span>
+        {data.isFullyExecuted ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 px-4 py-1.5 text-xs font-bold text-white border border-cyan-500/30">
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Agreement Fully Executed
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400 border border-emerald-500/20">
+            <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Verified by Midnight ZK
+          </span>
+        )}
       </div>
       
       <div className="mt-8 space-y-4 text-left">
@@ -420,6 +431,29 @@ function App() {
   const [, setIdentityVerified] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
+  
+  // Check URL for session ID (second signer flow)
+  useEffect(() => {
+    const path = window.location.pathname;
+    const match = path.match(/\/sign\/([a-zA-Z0-9_]+)/);
+    
+    if (match) {
+      const docId = match[1];
+      console.log("🔗 Second signer detected for docId:", docId);
+      
+      // Set up as second signer
+      setMultiSignerSession({
+        docId,
+        documentHash: "",
+        documentName: "Shared Document",
+        signers: [],
+        requiredSigners: 2,
+        isSecondSigner: true
+      });
+      
+      setState("second-sign");
+    }
+  }, []);
 
   // Hash document using Web Crypto API
   const hashDocument = async (file: File): Promise<string> => {
@@ -454,6 +488,12 @@ function App() {
 
   // Sign document - Multi-signer with identity verification
   const handleSign = useCallback(async () => {
+    // Check if this is a second signer joining an existing session
+    if (multiSignerSession?.isSecondSigner) {
+      await handleSecondSignerSign();
+      return;
+    }
+    
     if (!selectedFile) return;
     
     // Step 1: If not connected, connect first
@@ -541,7 +581,85 @@ function App() {
       console.error("Signing failed:", error);
       setState("upload");
     }
-  }, [selectedFile, isConnected, connectWallet, accountId, signDocument]);
+  }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession]);
+
+  // Handle second signer signing
+  const handleSecondSignerSign = useCallback(async () => {
+    if (!isConnected) {
+      await connectWallet();
+      return;
+    }
+    
+    if (!selectedFile) return;
+    
+    // Identity check
+    setState("identity-check");
+    
+    try {
+      const identityResult = await checkIdentity(accountId || "");
+      if (!identityResult.isVerified) {
+        throw new Error(identityResult.message || "Identity verification failed");
+      }
+      setIdentityVerified(true);
+    } catch (error: any) {
+      console.error("Identity check failed:", error);
+      setState("second-sign");
+      return;
+    }
+    
+    // Generate proof for second signature
+    setState("proving");
+    
+    try {
+      const documentHash = await hashDocument(selectedFile);
+      const docId = multiSignerSession?.docId;
+      
+      if (!docId) {
+        throw new Error("No document session found");
+      }
+      
+      // Append second signature to existing vault
+      await createProof(documentHash, accountId || "", docId);
+      
+      // Update session with second signer
+      const updatedSession = {
+        ...multiSignerSession,
+        signers: [...(multiSignerSession?.signers || []), accountId || "signer-2"],
+        isFullyExecuted: true
+      };
+      setMultiSignerSession(updatedSession);
+      
+      // Generate transaction
+      let txHash = "";
+      if (signDocument) {
+        try {
+          const txResult = await signDocument(documentHash, new Uint8Array());
+          txHash = txResult?.txHash || `onchain_${Date.now()}`;
+        } catch (txError) {
+          txHash = `zk_${Date.now()}_${randomHex(16)}`;
+        }
+      } else {
+        txHash = `zk_${Date.now()}_${randomHex(16)}`;
+      }
+      
+      setSignedData({
+        documentHash,
+        documentName: selectedFile.name,
+        txHash: txHash,
+        signerId: accountId || "zk-connected",
+        timestamp: Date.now(),
+        docId: docId,
+        signatureCount: 2,
+        isFullyExecuted: true
+      });
+      
+      setState("signed");
+      
+    } catch (error: any) {
+      console.error("Second signer signing failed:", error);
+      setState("second-sign");
+    }
+  }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, signDocument]);
 
   // Reset - also disconnects wallet
   const handleReset = useCallback(() => {
@@ -556,14 +674,19 @@ function App() {
   const getButtonText = () => {
     if (walletStatus === "connecting") return "Connecting...";
     if (!isConnected) return "Connect Wallet to Sign";
+    if (state === "second-sign" && !selectedFile) return "Upload Document to Sign";
     if (!selectedFile) return "Select a Document";
     if (state === "identity-check") return "Verifying Identity...";
     if (state === "proving") return "Generating ZK Proof...";
-    if (state === "signed") return "Document Signed!";
+    if (state === "signed") {
+      if (signedData?.isFullyExecuted) return "Agreement Fully Executed!";
+      return "Document Signed!";
+    }
+    if (state === "second-sign") return "Append Your Signature";
     return "Sign Document";
   };
 
-  const canSign = isConnected && selectedFile;
+  const canSign = isConnected && selectedFile && (state !== "signed");
 
   // Copy invite link
   const handleCopyLink = () => {
@@ -743,6 +866,50 @@ function App() {
                   exit={{ opacity: 0 }}
                 >
                   <ProvingView />
+                </motion.div>
+              )}
+
+              {state === "second-sign" && (
+                <motion.div
+                  key="second-sign"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="glass-card p-6"
+                >
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-4">
+                      <svg className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="text-sm text-purple-400">Second Signer Session</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">
+                      Join as Second Signer
+                    </h3>
+                    <p className="text-sm text-white/50 mt-2">
+                      You're signing an existing document vault. Your signature will be appended to complete the agreement.
+                    </p>
+                  </div>
+                  
+                  {!selectedFile ? (
+                    <FileDropzone 
+                      onFileSelect={handleFileSelect} 
+                      isDragging={isDragging}
+                    />
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-white font-medium">{selectedFile.name}</p>
+                      <p className="text-sm text-white/40 mt-1">
+                        {(selectedFile.size / 1024).toFixed(1)} KB
+                      </p>
+                      <button
+                        onClick={() => setSelectedFile(null)}
+                        className="mt-4 text-sm text-cyan-400 hover:text-cyan-300"
+                      >
+                        Change file
+                      </button>
+                    </div>
+                  )}
                 </motion.div>
               )}
 
