@@ -103,45 +103,19 @@ function Navbar({
           <a 
             href="/verify" 
             className="text-sm text-slate-600 dark:text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors font-medium"
+          
+          {/* Sign Link - Active */}
+          <span className="text-cyan-600 dark:text-cyan-400 font-semibold border-b-2 border-cyan-500 pb-1">
+            Sign
+          </span>
+          
+          {/* Verify Link - Inactive */}
+          <a 
+            href="/verify" 
+            className="text-sm text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors font-medium"
           >
             Verify
           </a>
-          {/* Error toast */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 px-3 py-1.5"
-            >
-              <span className="text-xs text-red-400">{error}</span>
-              <button onClick={onClearError} className="text-slate-400 dark:text-slate-600 dark:text-white/50 hover:text-slate-600 dark:hover:text-slate-900 dark:text-white">
-                ✕
-              </button>
-            </motion.div>
-          )}
-          
-          {isConnected && accountId && networkId && (
-            <div className="flex items-center gap-2">
-              <span className={`text-xs px-2 py-1 rounded ${
-                isCorrectNetwork(networkId) 
-                  ? "bg-emerald-500/10 text-emerald-400" 
-                  : "bg-yellow-500/10 text-yellow-400"
-              }`}>
-                {getNetworkName(networkId)}
-              </span>
-              <span className="text-xs text-slate-600 dark:text-white/50">
-                {accountId.slice(0, 8)}...
-              </span>
-            </div>
-          )}
-          
-          {isConnected ? (
-            <button 
-              onClick={() => window.location.reload()}
-              className="rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-700 dark:text-white/70 hover:bg-slate-200 dark:hover:bg-white/10"
-            >
-              Disconnect
             </button>
           ) : (
             <button 
