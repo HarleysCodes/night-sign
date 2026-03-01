@@ -89,7 +89,7 @@ function Navbar({
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDarkMode ? (
-              <svg className="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-slate-700 dark:text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             ) : (
@@ -102,7 +102,7 @@ function Navbar({
           {/* Verify Link */}
           <a 
             href="/verify" 
-            className="text-sm text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors font-medium"
+            className="text-sm text-slate-600 dark:text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors font-medium"
           >
             Verify
           </a>
@@ -115,7 +115,7 @@ function Navbar({
               className="flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 px-3 py-1.5"
             >
               <span className="text-xs text-red-400">{error}</span>
-              <button onClick={onClearError} className="text-slate-400 dark:text-white/50 hover:text-slate-600 dark:hover:text-slate-900 dark:text-white">
+              <button onClick={onClearError} className="text-slate-400 dark:text-slate-600 dark:text-white/50 hover:text-slate-600 dark:hover:text-slate-900 dark:text-white">
                 ✕
               </button>
             </motion.div>
@@ -130,7 +130,7 @@ function Navbar({
               }`}>
                 {getNetworkName(networkId)}
               </span>
-              <span className="text-xs text-white/50">
+              <span className="text-xs text-slate-600 dark:text-white/50">
                 {accountId.slice(0, 8)}...
               </span>
             </div>
@@ -139,7 +139,7 @@ function Navbar({
           {isConnected ? (
             <button 
               onClick={() => window.location.reload()}
-              className="rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-700 dark:text-white/70 hover:bg-slate-200 dark:hover:bg-white/10"
+              className="rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-700 dark:text-white/70 hover:bg-slate-200 dark:hover:bg-white/10"
             >
               Disconnect
             </button>
@@ -194,7 +194,7 @@ function FileDropzone({
           <p className="text-sm font-medium text-slate-700 dark:text-slate-900 dark:text-white">
             Drop your PDF here, or <span className="text-cyan-600 dark:text-cyan-400">browse</span>
           </p>
-          <p className="mt-1 text-xs text-slate-500 dark:text-white/40">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-600 dark:text-white/40">
             Maximum 10MB
           </p>
         </div>
@@ -221,7 +221,7 @@ function ProvingView() {
           </svg>
         </motion.div>
         <h3 className="text-xl font-bold text-slate-900 dark:text-white">Generating Zero-Knowledge Proof</h3>
-        <p className="mt-2 text-sm text-white/50">
+        <p className="mt-2 text-sm text-slate-600 dark:text-white/50">
           Confirm in your Midnight wallet to sign & submit
         </p>
       </div>
@@ -235,7 +235,7 @@ function ProvingView() {
             transition={{ duration: 3, ease: "easeInOut" }}
           />
         </div>
-        <div className="flex justify-between text-xs text-white/40">
+        <div className="flex justify-between text-xs text-slate-600 dark:text-white/40">
           <span>Hashing document...</span>
           <span>Generating proof...</span>
           <span>Submitting...</span>
@@ -304,7 +304,7 @@ on the Midnight blockchain network.
       </motion.div>
       
       <h3 className="text-xl font-bold text-slate-900 dark:text-white">Document Signed!</h3>
-      <p className="mt-2 text-sm text-white/50">
+      <p className="mt-2 text-sm text-slate-600 dark:text-white/50">
         Your zero-knowledge proof has been submitted to Midnight.
       </p>
       
@@ -329,28 +329,28 @@ on the Midnight blockchain network.
       
       <div className="mt-8 space-y-4 text-left">
         <div className="glass-card p-4">
-          <label className="text-xs text-white/40">Document Name</label>
+          <label className="text-xs text-slate-600 dark:text-white/40">Document Name</label>
           <p className="mt-1 text-sm text-white font-medium">
             {data.documentName}
           </p>
         </div>
         
         <div className="glass-card p-4">
-          <label className="text-xs text-white/40">Shielded Address</label>
+          <label className="text-xs text-slate-600 dark:text-white/40">Shielded Address</label>
           <p className="mt-1 font-mono text-xs text-cyan-400">
             {data.signerId}
           </p>
         </div>
         
         <div className="glass-card p-4">
-          <label className="text-xs text-white/40">ZK-Proof String</label>
+          <label className="text-xs text-slate-600 dark:text-white/40">ZK-Proof String</label>
           <div className="mt-1 max-h-20 overflow-y-auto rounded bg-black/30 p-2 font-mono text-xs text-purple-400">
             {data.txHash.substring(0, 64)}...
           </div>
         </div>
         
         <div className="glass-card p-4">
-          <label className="text-xs text-white/40">Mock Transaction ID</label>
+          <label className="text-xs text-slate-600 dark:text-white/40">Mock Transaction ID</label>
           <p className="mt-1 font-mono text-xs text-emerald-400 break-all">
             {data.txHash}
           </p>
@@ -359,7 +359,7 @@ on the Midnight blockchain network.
         {/* Multi-signer info */}
         {data.docId && (
           <div className="glass-card p-4">
-            <label className="text-xs text-white/40">Document Vault ID</label>
+            <label className="text-xs text-slate-600 dark:text-white/40">Document Vault ID</label>
             <p className="mt-1 font-mono text-xs text-purple-400 break-all">
               {data.docId}
             </p>
@@ -368,7 +368,7 @@ on the Midnight blockchain network.
         
         {data.signatureCount !== undefined && (
           <div className="glass-card p-4">
-            <label className="text-xs text-white/40">Signature Progress</label>
+            <label className="text-xs text-slate-600 dark:text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div 
@@ -384,8 +384,8 @@ on the Midnight blockchain network.
         )}
         
         <div className="glass-card p-4">
-          <label className="text-xs text-white/40">Signed At</label>
-          <p className="mt-1 text-sm text-white/70">
+          <label className="text-xs text-slate-600 dark:text-white/40">Signed At</label>
+          <p className="mt-1 text-sm text-slate-700 dark:text-white/70">
             {new Date(data.timestamp).toLocaleString()}
           </p>
         </div>
@@ -415,7 +415,7 @@ on the Midnight blockchain network.
             </svg>
             <span className="text-sm font-medium text-cyan-400">Invite Additional Signers</span>
           </div>
-          <p className="text-xs text-white/40 mb-3">
+          <p className="text-xs text-slate-600 dark:text-white/40 mb-3">
             Share this link with another party to collect their signature on the blockchain.
           </p>
           <div className="flex gap-2">
@@ -423,7 +423,7 @@ on the Midnight blockchain network.
               type="text" 
               readOnly 
               value={inviteLink}
-              className="flex-1 bg-black/20 rounded-lg px-3 py-2 text-xs text-white/60 font-mono truncate"
+              className="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-slate-700 dark:text-white/60 font-mono truncate"
             />
             <button 
               onClick={onCopyLink}
@@ -471,11 +471,11 @@ function TrustTimeline({
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               ) : (
-                <span className="text-white/40 font-bold">{s.step}</span>
+                <span className="text-slate-600 dark:text-white/40 font-bold">{s.step}</span>
               )}
             </div>
             <div className="mt-2 text-center">
-              <p className={`text-xs font-medium ${currentStep >= s.step ? 'text-white' : 'text-white/40'}`}>
+              <p className={`text-xs font-medium ${currentStep >= s.step ? 'text-white' : 'text-slate-600 dark:text-white/40'}`}>
                 {s.label}
               </p>
             </div>
@@ -842,7 +842,7 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mt-4 text-slate-600 dark:text-white/50"
+              className="mt-4 text-slate-600 dark:text-slate-600 dark:text-white/50"
             >
               Sign documents privately with Midnight Lace wallet
             </motion.p>
@@ -867,7 +867,7 @@ function App() {
           {state === "upload" && !selectedFile && (
             <div className="mb-6 p-4 glass-card">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium text-slate-700 dark:text-white/70">Number of Signers Required</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-700 dark:text-white/70">Number of Signers Required</label>
                 <span className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">{requiredSigners}</span>
               </div>
               <input
@@ -927,7 +927,7 @@ function App() {
                           </svg>
                         </div>
                         <p className="text-lg font-medium text-slate-900 dark:text-white">{selectedFile.name}</p>
-                        <p className="text-sm text-white/40">
+                        <p className="text-sm text-slate-600 dark:text-white/40">
                           {(selectedFile.size / 1024).toFixed(1)} KB
                         </p>
                       </motion.div>
@@ -952,7 +952,7 @@ function App() {
                       {multiSignerSession && (
                         <div className="mt-6 p-4 glass-card">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-white/60">Signature Progress</span>
+                            <span className="text-sm text-slate-700 dark:text-white/60">Signature Progress</span>
                             <span className="text-sm text-cyan-400">
                               {multiSignerSession.signers.length} / {multiSignerSession.requiredSigners}
                             </span>
@@ -968,13 +968,13 @@ function App() {
                           {/* Invite Signer Link */}
                           {multiSignerSession.signers.length < multiSignerSession.requiredSigners && (
                             <div className="mt-4 pt-4 border-t border-slate-200 dark:border-white/10">
-                              <p className="text-xs text-slate-500 dark:text-white/40 mb-2">Invite another signer:</p>
+                              <p className="text-xs text-slate-500 dark:text-slate-600 dark:text-white/40 mb-2">Invite another signer:</p>
                               <div className="flex gap-2">
                                 <input 
                                   type="text" 
                                   readOnly 
                                   value={inviteLink}
-                                  className="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white/60 font-mono truncate"
+                                  className="flex-1 bg-slate-100 dark:bg-slate-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-slate-700 dark:text-slate-700 dark:text-white/60 font-mono truncate"
                                 />
                                 <button 
                                   onClick={handleCopyLink}
@@ -1007,7 +1007,7 @@ function App() {
                   <h3 className="text-xl font-semibold text-white mb-2">
                     Verifying Identity
                   </h3>
-                  <p className="text-sm text-white/50">
+                  <p className="text-sm text-slate-600 dark:text-white/50">
                     Checking your Midnight Verifiable Credential...
                   </p>
                   
@@ -1052,7 +1052,7 @@ function App() {
                     <p className="text-purple-300">
                       You are joining a secure Midnight session
                     </p>
-                    <p className="text-xs text-white/40 mt-2 font-mono">
+                    <p className="text-xs text-slate-600 dark:text-white/40 mt-2 font-mono">
                       Session: {multiSignerSession?.docId}
                     </p>
                   </div>
@@ -1060,16 +1060,16 @@ function App() {
                   {/* Show upload OR file info */}
                   {!selectedFile ? (
                     <div className="mb-6">
-                      <p className="text-white/50 mb-4">Upload the document to sign:</p>
+                      <p className="text-slate-600 dark:text-white/50 mb-4">Upload the document to sign:</p>
                       <FileDropzone 
                         onFileSelect={handleFileSelect} 
                         isDragging={isDragging}
                       />
                     </div>
                   ) : (
-                    <div className="mb-6 p-4 rounded-xl bg-black/20">
+                    <div className="mb-6 p-4 rounded-xl bg-slate-100 dark:bg-black/20">
                       <p className="text-white font-medium">{selectedFile.name}</p>
-                      <p className="text-sm text-white/40">
+                      <p className="text-sm text-slate-600 dark:text-white/40">
                         {(selectedFile.size / 1024).toFixed(1)} KB
                       </p>
                       <button
