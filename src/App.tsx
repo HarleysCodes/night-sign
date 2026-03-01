@@ -52,6 +52,7 @@ function FileDropzone({ onFileSelect, isDragging }: { onFileSelect: (file: File)
   const inputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => inputRef.current?.click();
 
+  const appKey = multiSignerSession?.docId ? `${multiSignerSession.docId}-${count}` : "default";
   return (
     <div onClick={handleClick} className={`dropzone p-12 ${isDragging ? "active" : ""}`}>
       <input ref={inputRef} type="file" accept="application/pdf" onChange={(e) => e.target.files?.[0] && onFileSelect(e.target.files[0])} className="hidden" />
@@ -167,6 +168,7 @@ function App() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentRole, setCurrentRole] = useState("Signer");
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [count, setCount] = useState(1);
   const [isFetchingDoc, setIsFetchingDoc] = useState(false);
   
   useEffect(() => {
@@ -389,7 +391,7 @@ function App() {
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
               {state === "second-sign" && (
                 <motion.div key="second" className="text-center p-8 text-white">
-                  <h2 className="text-xl font-bold mb-4">Signer {multiSignerSession?.signers.length ? multiSignerSession.signers.length + 1 : 2} / {multiSignerSession?.requiredSigners}</h2>
+                  <h2 className="text-xl font-bold mb-4">Signer {count + 1} / {multiSignerSession?.requiredSigners}</h2>
                   {isFetchingDoc && (
                     <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                       <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
