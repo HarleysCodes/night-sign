@@ -237,10 +237,13 @@ export function decodeKey(data: Uint8Array): string {
   return new TextDecoder().decode(data);
 }
 
-// Generate invite link for multi-signer
-export function generateInviteLink(docId: string, baseUrl: string = window.location.origin): string {
-  // Use root path with query param for second signer
-  return `${baseUrl}/?doc_id=${docId}`;
+// Generate invite link for multi-signer with optional role
+export function generateInviteLink(docId: string, role?: string, baseUrl: string = "https://night-sign.vercel.app"): string {
+  const params = new URLSearchParams({ doc_id: docId });
+  if (role) {
+    params.append('role', role);
+  }
+  return `${baseUrl}/?${params.toString()}`;
 }
 
 // Parse invite link
