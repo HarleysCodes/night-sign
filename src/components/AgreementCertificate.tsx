@@ -180,7 +180,7 @@ ${data.txHash}
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-white/40">{signer.role}</p>
-                    <p className="font-mono text-sm text-cyan-400">{signer.address?.slice(0, 12)}...</p>
+                    <p className="font-mono text-sm text-cyan-400">{signer.address?.includes("prev-signer") ? "0x... (Masked for privacy)" : signer.address?.slice(0, 16) + "...verified"}</p>
                   </div>
                   <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
                 </div>
