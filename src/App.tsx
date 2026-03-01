@@ -160,6 +160,11 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
+  // Simple URL parsing
+  const params = new URLSearchParams(window.location.search);
+  const urlDocId = params.get("doc_id");
+  const urlCount = parseInt(params.get("count") || "1", 10);
+
   const { isConnected, accountId, status: walletStatus, error: walletError, connect: connectWallet, signDocument } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
