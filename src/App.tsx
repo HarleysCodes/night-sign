@@ -228,7 +228,7 @@ function App() {
         docId,
         documentHash: "",
         documentName: "Shared Document",
-        signers: Array(count - 1).fill('prev-signer'),
+        signers: Array(count).fill('prev-signer'),
         requiredSigners: req,
         isSecondSigner: true
       });
