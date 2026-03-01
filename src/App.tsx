@@ -52,11 +52,6 @@ function FileDropzone({ onFileSelect, isDragging }: { onFileSelect: (file: File)
   const inputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => inputRef.current?.click();
 
-  const appKey = multiSignerSession?.docId ? `${multiSignerSession.docId}-${count}` : "default";
-  const currentSignerIndex = Number(count || 0);
-  if (!docId && !window.location.search.includes("doc_id")) {
-    return <div className="min-h-screen bg-[#050a10] flex items-center justify-center text-white">Loading NightSign Boardroom...</div>;
-  }
   return (
     <div onClick={handleClick} className={`dropzone p-12 ${isDragging ? "active" : ""}`}>
       <input ref={inputRef} type="file" accept="application/pdf" onChange={(e) => e.target.files?.[0] && onFileSelect(e.target.files[0])} className="hidden" />
@@ -160,11 +155,6 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
-  // Simple URL parsing
-  const params = new URLSearchParams(window.location.search);
-  const urlDocId = params.get("doc_id");
-  const urlCount = parseInt(params.get("count") || "1", 10);
-
   const { isConnected, accountId, status: walletStatus, error: walletError, connect: connectWallet, signDocument } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
@@ -179,7 +169,12 @@ function App() {
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [count, setCount] = useState(1);
   const [isFetchingDoc, setIsFetchingDoc] = useState(false);
-  
+
+  // Simple URL parsing
+  const params = new URLSearchParams(window.location.search);
+  const urlDocId = params.get("doc_id");
+  const urlCount = parseInt(params.get("count") || "1", 10);
+
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
@@ -400,7 +395,7 @@ function App() {
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
               {state === "second-sign" && (
                 <motion.div key="second" className="text-center p-8 text-white">
-                  <h2 className="text-xl font-bold mb-4">Signer {count + 1} / {multiSignerSession?.requiredSigners}</h2>
+                  <h2 className="text-xl font-bold mb-4">Signer {urlCount + 1} / {multiSignerSession?.requiredSigners}</h2>
                   {isFetchingDoc && (
                     <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                       <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
