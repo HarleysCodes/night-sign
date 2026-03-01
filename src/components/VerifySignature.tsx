@@ -4,7 +4,7 @@
  * Page for verifying ZK-signed documents with selective disclosure.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { verifyWithDisclosure, VerificationResult, ZKProof } from "../managed/docusign";
 import { sha256 } from "../lib/utils";
@@ -24,6 +24,49 @@ export function VerifySignature() {
     error: null,
   });
   const [isDragging, setIsDragging] = useState(false);
+
+  // Auto-verify from QR code URL params
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const docId = urlParams.get('doc_id');
+    const proof = urlParams.get('proof');
+    
+    if (docId && proof) {
+      console.log("🔗 Auto-verifying from QR code...");
+      console.log("📋 docId:", docId);
+      console.log("🔐 proof:", proof.substring(0, 20) + "...");
+      
+      // Set proof string
+      setProofString(decodeURIComponent(proof));
+      
+      // Auto-trigger verification after a short delay to let UI render
+      setTimeout(async () => {
+        setVerifyState({ status: "verifying", result: null, error: null });
+        
+        try {
+          // Create mock proof object
+          const proofObj: ZKProof = {
+            proof: new TextEncoder().encode(decodeURIComponent(proof)),
+            publicSignals: [new TextEncoder().encode(docId)]
+          };
+          
+          const result = await verifyWithDisclosure(proofObj, docId);
+          
+          setVerifyState({
+            status: "verified",
+            result,
+            error: null
+          });
+        } catch (err: any) {
+          setVerifyState({
+            status: "error",
+            result: null,
+            error: err.message || "Auto-verification failed"
+          });
+        }
+      }, 500);
+    }
+  }, []);
 
   const handleFileDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();

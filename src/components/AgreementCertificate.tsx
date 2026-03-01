@@ -27,9 +27,9 @@ export function AgreementCertificate({ data, onReset }: AgreementCertificateProp
   const [copiedProof, setCopiedProof] = useState(false);
   
   // Generate verification URL
-  // Production URL for QR code
+  // Production URL for QR code - include proof for auto-verify
   const PRODUCTION_URL = "https://night-sign.vercel.app";
-  const verifyUrl = `${PRODUCTION_URL}/verify?doc_id=${data.docId}`;
+  const verifyUrl = `${PRODUCTION_URL}/verify?doc_id=${data.docId}&proof=${encodeURIComponent(data.txHash)}`;
   
   // Handle download receipt
   const handleDownloadReceipt = useCallback(() => {
