@@ -129,7 +129,7 @@ export function VerifySignature() {
   return (
     <div className="space-bg min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 bg-black/60 backdrop-blur-md">
+      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/60 backdrop-blur-md">
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
           <a href="/" className="flex items-center" style={{ marginLeft: '-12px' }}>
             <img 
@@ -143,7 +143,7 @@ export function VerifySignature() {
             />
           </a>
           <nav className="flex items-center gap-6">
-            <a href="/" className="text-sm text-white/50 hover:text-cyan-400 transition-colors font-medium">
+            <a href="/" className="text-sm text-slate-600 dark:text-white/50 hover:text-cyan-400 transition-colors font-medium">
               Sign
             </a>
             <span className="text-sm text-cyan-400 font-medium">Verify</span>
@@ -160,7 +160,7 @@ export function VerifySignature() {
           <h1 className="text-3xl font-bold text-white mb-3">
             Verify Signature
           </h1>
-          <p className="text-white/50">
+          <p className="text-slate-600 dark:text-white/50">
             Verify a zero-knowledge proof with selective disclosure
           </p>
         </motion.div>
@@ -184,8 +184,8 @@ export function VerifySignature() {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">Signature Verified</h3>
-                        <p className="text-sm text-white/50">Zero-knowledge proof is valid</p>
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Signature Verified</h3>
+                        <p className="text-sm text-slate-600 dark:text-white/50">Zero-knowledge proof is valid</p>
                       </div>
                     </>
                   ) : (
@@ -196,8 +196,8 @@ export function VerifySignature() {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">Invalid Signature</h3>
-                        <p className="text-sm text-white/50">Proof verification failed</p>
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Invalid Signature</h3>
+                        <p className="text-sm text-slate-600 dark:text-white/50">Proof verification failed</p>
                       </div>
                     </>
                   )}
@@ -227,7 +227,7 @@ export function VerifySignature() {
 
               <button
                 onClick={handleReset}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-medium text-white transition-colors hover:bg-white/10"
+                className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-4 py-3 font-medium text-white transition-colors hover:bg-white/10"
               >
                 Verify Another Document
               </button>
@@ -260,7 +260,7 @@ export function VerifySignature() {
                     <svg className="h-12 w-12 text-white/20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
-                    <p className="text-white/60 mb-2">Drop your document here</p>
+                    <p className="text-slate-700 dark:text-white/60 mb-2">Drop your document here</p>
                     <label className="cursor-pointer text-sm text-cyan-400 hover:text-cyan-300">
                       or browse files
                       <input type="file" className="hidden" onChange={handleFileSelect} />
@@ -271,14 +271,14 @@ export function VerifySignature() {
 
               {/* Proof String Input */}
               <div className="glass-card p-4">
-                <label className="block text-xs text-white/40 mb-2">
+                <label className="block text-xs text-slate-600 dark:text-white/40 mb-2">
                   ZK-Proof String
                 </label>
                 <textarea
                   value={proofString}
                   onChange={(e) => setProofString(e.target.value)}
                   placeholder="Paste the proof string from the signature..."
-                  className="w-full bg-black/20 rounded-lg p-3 text-sm text-white placeholder-white/30 font-mono resize-none h-24 focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
+                  className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/30 font-mono resize-none h-24 focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
                 />
               </div>
 
@@ -352,7 +352,7 @@ function DisclosureCard({
         <p className={`text-sm font-medium ${verified ? "text-emerald-400" : "text-red-400"}`}>
           {label}
         </p>
-        <p className="text-xs text-white/50">{description}</p>
+        <p className="text-xs text-slate-600 dark:text-white/50">{description}</p>
       </div>
     </div>
   );
