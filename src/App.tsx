@@ -216,7 +216,19 @@ function ProvingView() {
   );
 }
 
-function SignedView({ data, onReset }: { data: SignedDocument; onReset: () => void }) {
+function SignedView({ 
+  data, 
+  onReset,
+  inviteLink,
+  onCopyLink,
+  copiedLink
+}: { 
+  data: SignedDocument; 
+  onReset: () => void;
+  inviteLink?: string;
+  onCopyLink?: () => void;
+  copiedLink?: boolean;
+}) {
   
   const handleDownloadReceipt = () => {
     const receipt = `
@@ -353,6 +365,35 @@ on the Midnight blockchain network.
       >
         Sign Another Document
       </button>
+      
+      {/* Multi-Signer Invite Link in SignedView */}
+      {inviteLink && (
+        <div className="mt-6 p-4 glass-card border border-cyan-500/20">
+          <div className="flex items-center gap-2 mb-3">
+            <svg className="h-4 w-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span className="text-sm font-medium text-cyan-400">Invite Additional Signers</span>
+          </div>
+          <p className="text-xs text-white/40 mb-3">
+            Share this link with another party to collect their signature on the blockchain.
+          </p>
+          <div className="flex gap-2">
+            <input 
+              type="text" 
+              readOnly 
+              value={inviteLink}
+              className="flex-1 bg-black/20 rounded-lg px-3 py-2 text-xs text-white/60 font-mono truncate"
+            />
+            <button 
+              onClick={onCopyLink}
+              className="px-3 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs hover:bg-cyan-500/30 whitespace-nowrap"
+            >
+              {copiedLink ? "Copied!" : "Copy Link"}
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -712,7 +753,13 @@ function App() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <SignedView data={signedData} onReset={handleReset} />
+                  <SignedView 
+                    data={signedData} 
+                    onReset={handleReset}
+                    inviteLink={inviteLink}
+                    onCopyLink={handleCopyLink}
+                    copiedLink={copiedLink}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
