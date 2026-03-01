@@ -267,7 +267,17 @@ function App() {
         try { const txResult = await signDocument(documentHash, new Uint8Array()); txHash = txResult?.txHash || txHash; } catch (e) {}
       }
       
-      setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: newSignersList.length, isFullyExecuted: isComplete });
+      setSignedData({
+        documentHash,
+        documentName: selectedFile.name,
+        txHash,
+        signerId: accountId || "zk",
+        timestamp: Date.now(),
+        docId,
+        signatureCount: newSignersList.length,
+        isFullyExecuted: isComplete,
+        signersList: newSignersList.map((addr, idx) => ({ address: addr, role: "Signer " + (idx + 1) }))
+      });
       setState("signed");
     } catch (error) { setState("second-sign"); }
   }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, signDocument]);

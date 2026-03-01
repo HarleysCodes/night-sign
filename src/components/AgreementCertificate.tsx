@@ -8,6 +8,8 @@ import { useState, useCallback } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { motion } from "framer-motion";
 
+interface SignerInfo { address: string; role: string; }
+
 interface AgreementCertificateProps {
   data: {
     documentHash: string;
@@ -18,6 +20,7 @@ interface AgreementCertificateProps {
     docId: string;
     signatureCount: number;
     isFullyExecuted?: boolean;
+    signersList?: SignerInfo[];
   };
   onReset: () => void;
 }
@@ -167,33 +170,35 @@ ${data.txHash}
           </div>
           
           <div className="space-y-3">
-            {/* Signer 1 */}
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
-                <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+            {data.signersList && data.signersList.length > 0 ? (
+              data.signersList.map((signer, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
+                    <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-white/40">{signer.role}</p>
+                    <p className="font-mono text-sm text-cyan-400">{signer.address?.slice(0, 12)}...</p>
+                  </div>
+                  <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
+                  <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs text-white/40">Signer 1</p>
+                  <p className="font-mono text-sm text-cyan-400">{data.signerId?.slice(0, 12)}...</p>
+                </div>
+                <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
               </div>
-              <div className="flex-1">
-                <p className="text-xs text-white/40">Signer 1</p>
-                <p className="font-mono text-sm text-cyan-400">{data.signerId}</p>
-              </div>
-              <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
-            </div>
-            
-            {/* Signer 2 */}
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: 'rgba(16, 185, 129, 0.15)' }}>
-                <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="text-xs text-white/40">Signer 2</p>
-                <p className="font-mono text-sm text-cyan-400">0x...verified</p>
-              </div>
-              <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
-            </div>
+            )}
           </div>
         </div>
 
