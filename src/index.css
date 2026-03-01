@@ -17,7 +17,13 @@
 /* Aerodrome-style Glass Card */
 @layer components {
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-lg border border-white/10 rounded-2xl shadow-2xl;
+    @apply bg-white dark:bg-white/[0.03] backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+    border-top: 1px solid rgba(0, 243, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(0, 243, 255, 0.05);
+  }
+
+  .dark .glass-card {
     background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
     border-top: 1px solid rgba(0, 243, 255, 0.2);
     border-left: 1px solid rgba(0, 243, 255, 0.1);
@@ -29,7 +35,7 @@
   }
 
   .glass-card-hover:hover {
-    @apply bg-white/[0.05] border-white/10;
+    @apply bg-white/10 dark:bg-white/[0.05] border-white/10 dark:border-white/20;
     box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
   }
 }

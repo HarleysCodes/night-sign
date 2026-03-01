@@ -65,7 +65,7 @@ function Navbar({
   setIsDarkMode: (v: boolean) => void;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 bg-black/60 backdrop-blur-md">
+    <nav className={`fixed top-0 left-0 right-0 z-50 h-20 border-b ${isDarkMode ? 'border-white/10 bg-black/60' : 'border-slate-200 bg-white/80'} backdrop-blur-md`}>
       <div className="mx-auto flex h-full max-w-4xl items-center justify-between px-4">
         <div className="flex items-center" style={{ marginLeft: '-12px' }}>
           <img 
@@ -74,7 +74,9 @@ function Navbar({
             className="w-auto"
             style={{ 
               height: '72px',
-              filter: 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
+              filter: isDarkMode 
+                ? 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
+                : 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.15))'
             }}
           />
         </div>
@@ -83,7 +85,7 @@ function Navbar({
           {/* Theme Toggle */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
             {isDarkMode ? (
@@ -100,7 +102,7 @@ function Navbar({
           {/* Verify Link */}
           <a 
             href="/verify" 
-            className="text-sm text-white/50 hover:text-cyan-400 transition-colors font-medium"
+            className="text-sm text-slate-600 dark:text-white/50 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors font-medium"
           >
             Verify
           </a>
@@ -368,13 +370,13 @@ on the Midnight blockchain network.
           <div className="glass-card p-4">
             <label className="text-xs text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
-              <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
                   style={{ width: `${Math.min((data.signatureCount / requiredSigners) * 100, 100)}%` }}
                 />
               </div>
-              <span className="text-sm text-cyan-400">
+              <span className="text-sm text-cyan-600 dark:text-cyan-400">
                 {data.signatureCount}/{requiredSigners}
               </span>
             </div>
@@ -823,15 +825,15 @@ function App() {
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white"
+              className="text-4xl font-bold text-slate-900 dark:text-white"
             >
-              Zero-Knowledge <span className="text-cyan-400">Document Signing</span>
+              Zero-Knowledge <span className="text-cyan-600 dark:text-cyan-400">Document Signing</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mt-4 text-white/50"
+              className="mt-4 text-slate-600 dark:text-white/50"
             >
               Sign documents privately with Midnight Lace wallet
             </motion.p>
@@ -856,8 +858,8 @@ function App() {
           {state === "upload" && !selectedFile && (
             <div className="mb-6 p-4 glass-card">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium text-white/70">Number of Signers Required</label>
-                <span className="text-2xl font-bold text-cyan-400">{requiredSigners}</span>
+                <label className="text-sm font-medium text-slate-700 dark:text-white/70">Number of Signers Required</label>
+                <span className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">{requiredSigners}</span>
               </div>
               <input
                 type="range"
@@ -865,9 +867,9 @@ function App() {
                 max="5"
                 value={requiredSigners}
                 onChange={(e) => setRequiredSigners(parseInt(e.target.value))}
-                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                className="w-full h-2 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
               />
-              <div className="flex justify-between mt-2 text-xs text-white/30">
+              <div className="flex justify-between mt-2 text-xs text-slate-400 dark:text-white/30">
                 <span>2</span>
                 <span>3</span>
                 <span>4</span>
@@ -956,14 +958,14 @@ function App() {
                           
                           {/* Invite Signer Link */}
                           {multiSignerSession.signers.length < multiSignerSession.requiredSigners && (
-                            <div className="mt-4 pt-4 border-t border-white/10">
-                              <p className="text-xs text-white/40 mb-2">Invite another signer:</p>
+                            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-white/10">
+                              <p className="text-xs text-slate-500 dark:text-white/40 mb-2">Invite another signer:</p>
                               <div className="flex gap-2">
                                 <input 
                                   type="text" 
                                   readOnly 
                                   value={inviteLink}
-                                  className="flex-1 bg-black/20 rounded-lg px-3 py-2 text-xs text-white/60 font-mono truncate"
+                                  className="flex-1 bg-slate-100 dark:bg-black/20 rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white/60 font-mono truncate"
                                 />
                                 <button 
                                   onClick={handleCopyLink}
