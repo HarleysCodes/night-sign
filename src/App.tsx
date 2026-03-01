@@ -532,10 +532,10 @@ function App() {
       
       // Set up as second signer
       setRequiredSigners(req);
-      setMultiSignerSession({
+      setRequiredSigners(req); setMultiSignerSession({
         docId,
         documentHash: "",
-        documentName: "Shared Document",
+        documentName: "Shared Document", signers: Array(count - 1).fill("prev-signer"),
         signers: Array(count - 1).fill('prev-signer'),
         signers: [],
         requiredSigners: req,
@@ -636,7 +636,7 @@ function App() {
       
       // Generate invite link for second signer
       const link = generateInviteLink(docId);
-      setInviteLink(link);
+      const linkWithParams = link + (link.includes("?") ? "&" : "?") + "req=" + requiredSigners + "&count=2"; setInviteLink(linkWithParams);
       
       // Step 4: On-Chain Submission via Lace Wallet
       let txHash = "";
