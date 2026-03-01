@@ -129,7 +129,7 @@ export function VerifySignature() {
   return (
     <div className="space-bg min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/60 backdrop-blur-md">
+      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-[#020617]">
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
           <a href="/" className="flex items-center" style={{ marginLeft: '-12px' }}>
             <img 
