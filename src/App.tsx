@@ -531,12 +531,14 @@ function App() {
       console.log("🔗 Second signer detected for docId:", docId);
       
       // Set up as second signer
+      setRequiredSigners(req);
       setMultiSignerSession({
         docId,
         documentHash: "",
         documentName: "Shared Document",
+        signers: Array(count - 1).fill('prev-signer'),
         signers: [],
-        requiredSigners: requiredSigners,
+        requiredSigners: req,
         isSecondSigner: true
       });
       
