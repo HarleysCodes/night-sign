@@ -166,6 +166,7 @@ function App() {
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentRole, setCurrentRole] = useState("Signer");
+  const [autoLoaded, setAutoLoaded] = useState(false);
   
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
@@ -195,6 +196,7 @@ function App() {
           const encryptedBlob = await fetchFromIPFS(ipfsCid);
           const decryptedFile = await decryptFile(encryptedBlob, sessionKey, decodeURIComponent(fileName));
           setSelectedFile(decryptedFile);
+          setAutoLoaded(true);
         } catch (err) {
           console.error("Failed to fetch/decrypt file:", err);
         }
