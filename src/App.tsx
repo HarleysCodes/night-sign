@@ -173,6 +173,7 @@ function App() {
   const params = new URLSearchParams(window.location.search);
   const urlDocId = params.get("doc_id");
   const currentSignerCount = parseInt(params.get("count") || "0", 10);
+  const totalPipelineSteps = requiredSigners;
 
     useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
@@ -374,11 +375,11 @@ function App() {
                 <label className="text-sm font-medium text-white/70">Number of Signers Required</label>
                 <span className="text-2xl font-bold text-cyan-400">{requiredSigners}</span>
               </div>
-              <input type="range" min="2" max="5" value={requiredSigners} onChange={(e) => setRequiredSigners(parseInt(e.target.value))} className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
+              <input type="range" min="1" max="5" value={requiredSigners} onChange={(e) => setRequiredSigners(parseInt(e.target.value))} className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
             </div>
           )}
 
-          <TrustTimeline currentStep={signedData?.isFullyExecuted ? requiredSigners : state === "signed" ? Math.min(requiredSigners - 1, 2) : selectedFile ? 1 : 0} requiredSigners={requiredSigners} />
+          <TrustTimeline currentStep={signedData?.isFullyExecuted ? totalPipelineSteps : state === "signed" ? Math.min(requiredSigners - 1, 2) : selectedFile ? 1 : 0} requiredSigners={requiredSigners} />
 
           <motion.div layout className="glass-card p-8" onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={(e) => { e.preventDefault(); setIsDragging(false); const file = e.dataTransfer.files[0]; if (file) setSelectedFile(file); }}>
             <AnimatePresence mode="wait">
