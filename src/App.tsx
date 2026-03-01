@@ -434,11 +434,14 @@ function App() {
   
   // Check URL for session ID (second signer flow)
   useEffect(() => {
-    const path = window.location.pathname;
-    const match = path.match(/\/sign\/([a-zA-Z0-9_]+)/);
+    // Check both path and query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const pathDocId = window.location.pathname.match(/\/sign\/([a-zA-Z0-9_]+)/);
+    const queryDocId = urlParams.get('doc_id');
     
-    if (match) {
-      const docId = match[1];
+    const docId = pathDocId?.[1] || queryDocId;
+    
+    if (docId) {
       console.log("🔗 Second signer detected for docId:", docId);
       
       // Set up as second signer
@@ -730,6 +733,21 @@ function App() {
               Sign documents privately with Midnight Lace wallet
             </motion.p>
           </div>
+
+          {/* Second Signer Debug Header */}
+          {multiSignerSession?.isSecondSigner && (
+            <div className="mb-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <svg className="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="text-purple-400 font-semibold">Signer 2: Joining Session</span>
+              </div>
+              <p className="text-xs text-purple-300/60 font-mono">
+                Session ID: {multiSignerSession.docId}
+              </p>
+            </div>
+          )}
 
           {/* Main Card */}
           <motion.div
