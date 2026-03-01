@@ -673,7 +673,7 @@ function App() {
   // Determine button state
   const getButtonText = () => {
     if (walletStatus === "connecting") return "Connecting...";
-    if (!isConnected) return "Connect Wallet to Sign";
+    if (!isConnected && !multiSignerSession?.isSecondSigner) return "Connect Wallet to Sign";
     if (state === "second-sign" && !selectedFile) return "Upload Document to Sign";
     if (!selectedFile) return "Select a Document";
     if (state === "identity-check") return "Verifying Identity...";
@@ -686,7 +686,10 @@ function App() {
     return "Sign Document";
   };
 
-  const canSign = isConnected && selectedFile && (state !== "signed");
+  // Allow signing if:
+  // 1. Connected and file selected (normal flow)
+  // 2. Second signer session with file selected
+  const canSign = (isConnected || multiSignerSession?.isSecondSigner) && selectedFile && (state !== "signed");
 
   // Copy invite link
   const handleCopyLink = () => {
