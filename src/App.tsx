@@ -174,12 +174,7 @@ function App() {
   const urlDocId = params.get("doc_id");
   const currentSignerCount = parseInt(params.get("count") || "0", 10);
 
-  // Loading state for signers 2+ while file is being fetched
-  if (currentSignerCount > 0 && !selectedFile) {
-    return <div className="min-h-screen bg-[#050a10] flex items-center justify-center text-white flex-col gap-4"><div className="text-2xl">🔓</div><div>Unlocking Private Boardroom Document...</div></div>;
-  }
-
-  useEffect(() => {
+    useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   }, [isDarkMode]);
@@ -389,7 +384,12 @@ function App() {
             <AnimatePresence mode="wait">
               {state === "upload" && currentSignerCount === 0 && (
                 <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
+                  {currentSignerCount > 0 && !selectedFile ? (
+                    <div className="animate-pulse text-gray-400 p-8 text-center border border-gray-800 rounded-lg">
+                      <div className="text-lg mb-2">🔓 Decrypting document from IPFS...</div>
+                      <div className="text-sm text-gray-600">Please wait while we fetch the private boardroom document</div>
+                    </div>
+                  ) : !selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
                       <p className="text-lg font-medium text-white">{selectedFile.name}</p>
                       <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={handleSign} disabled={!canSign} className="neon-button w-full mt-4">Sign Document</button>
