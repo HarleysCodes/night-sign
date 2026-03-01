@@ -53,6 +53,10 @@ function FileDropzone({ onFileSelect, isDragging }: { onFileSelect: (file: File)
   const handleClick = () => inputRef.current?.click();
 
   const appKey = multiSignerSession?.docId ? `${multiSignerSession.docId}-${count}` : "default";
+  const currentSignerIndex = Number(count || 0);
+  if (!docId && !window.location.search.includes("doc_id")) {
+    return <div className="min-h-screen bg-[#050a10] flex items-center justify-center text-white">Loading NightSign Boardroom...</div>;
+  }
   return (
     <div onClick={handleClick} className={`dropzone p-12 ${isDragging ? "active" : ""}`}>
       <input ref={inputRef} type="file" accept="application/pdf" onChange={(e) => e.target.files?.[0] && onFileSelect(e.target.files[0])} className="hidden" />
