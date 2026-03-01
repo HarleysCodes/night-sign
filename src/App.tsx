@@ -115,7 +115,7 @@ function Navbar({
               className="flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 px-3 py-1.5"
             >
               <span className="text-xs text-red-400">{error}</span>
-              <button onClick={onClearError} className="text-white/50 hover:text-white">
+              <button onClick={onClearError} className="text-slate-400 dark:text-white/50 hover:text-slate-600 dark:hover:text-white">
                 ✕
               </button>
             </motion.div>
@@ -511,6 +511,15 @@ function App() {
   
   // Theme state
   const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  // Sync dark mode with documentElement
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
   
   // Signer count configuration
   const [requiredSigners, setRequiredSigners] = useState(2);
