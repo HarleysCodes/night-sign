@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMidnightWallet, getNetworkName, isCorrectNetwork } from "./hooks/useMidnightWallet";
 import { createProof, checkIdentity, generateInviteLink } from "./managed/docusign";
+import { AgreementCertificate } from "./components/AgreementCertificate";
 
 // Types
 type AppState = "upload" | "identity-check" | "proving" | "signed" | "second-sign";
@@ -955,13 +956,17 @@ function App() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <SignedView 
-                    data={signedData} 
-                    onReset={handleReset}
-                    inviteLink={inviteLink}
-                    onCopyLink={handleCopyLink}
-                    copiedLink={copiedLink}
-                  />
+                  {signedData?.isFullyExecuted ? (
+                    <AgreementCertificate data={signedData} onReset={handleReset} />
+                  ) : (
+                    <SignedView 
+                      data={signedData} 
+                      onReset={handleReset}
+                      inviteLink={inviteLink}
+                      onCopyLink={handleCopyLink}
+                      copiedLink={copiedLink}
+                    />
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
