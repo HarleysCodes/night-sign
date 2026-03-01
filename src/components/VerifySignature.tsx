@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMidnightWallet } from "../hooks/useMidnightWallet";
 import { verifyWithDisclosure, VerificationResult, ZKProof } from "../managed/docusign";
 import { sha256 } from "../lib/utils";
 
@@ -23,6 +24,21 @@ export function VerifySignature() {
     error: null,
   });
   const [isDragging, setIsDragging] = useState(false);
+
+  // Wallet hook
+  const { isConnected, connect: connectWallet, accountId, status: walletStatus } = useMidnightWallet();
+  
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  // Sync dark mode with documentElement
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   // Auto-verify from QR code URL params
   useEffect(() => {
@@ -95,7 +111,36 @@ export function VerifySignature() {
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
           <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all" />
         </div>
-        <div className="flex gap-6 items-center">
+        <div className="flex gap-4 items-center">
+          {/* Wallet Status / Connect */}
+          {isConnected ? (
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              {accountId?.substring(0, 8)}...
+            </span>
+          ) : (
+            <button 
+              onClick={() => connectWallet()}
+              className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 dark:hover:bg-cyan-500/30 transition-colors"
+            >
+              {walletStatus === 'connecting' ? 'Connecting...' : 'Connect'}
+            </button>
+          )}
+          
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+          >
+            {isDarkMode ? (
+              <svg className="w-5 h-5 text-slate-600 dark:text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
           <button onClick={() => window.location.href='/'} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium">Sign Document</button>
           <span className="text-cyan-600 dark:text-cyan-400 font-semibold border-b-2 border-cyan-500 pb-1">Verify Signature</span>
         </div>
