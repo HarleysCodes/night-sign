@@ -344,7 +344,7 @@ on the Midnight blockchain network.
         
         <div className="glass-card p-4">
           <label className="text-xs text-slate-600 dark:text-white/40">ZK-Proof String</label>
-          <div className="mt-1 max-h-20 overflow-y-auto rounded bg-black/30 p-2 font-mono text-xs text-purple-400">
+          <div className="mt-1 max-h-20 overflow-y-auto rounded bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 p-2 font-mono text-xs text-purple-600 dark:text-purple-400">
             {data.txHash.substring(0, 64)}...
           </div>
         </div>

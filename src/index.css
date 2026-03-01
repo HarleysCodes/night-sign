@@ -22,7 +22,11 @@
 /* Aerodrome-style Glass Card */
 @layer components {
   .glass-card {
-    @apply bg-white/90 backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl;
+    @apply bg-white border border-slate-200 rounded-2xl shadow-xl;
+  }
+  
+  .dark .glass-card {
+    @apply bg-[#0f172a] border-white/10 shadow-none;
   }
 
   .glass-card-hover {
@@ -143,12 +147,12 @@
 
 /* Animations */
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+ 0% {
+   background-position: -200% 0;
+ }
+ 100% {
+   background-position: 200% 0;
+ }
 }
 
 .animate-shimmer {
