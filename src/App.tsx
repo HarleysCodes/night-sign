@@ -173,7 +173,7 @@ function App() {
   // Simple URL parsing
   const params = new URLSearchParams(window.location.search);
   const urlDocId = params.get("doc_id");
-  const urlCount = parseInt(params.get("count") || "1", 10);
+  const urlCount = parseInt(params.get("count") || "0", 10);
 
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
