@@ -5,6 +5,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMidnightWallet, getNetworkName, isCorrectNetwork } from "./hooks/useMidnightWallet";
 import { createProof, checkIdentity, generateInviteLink } from "./managed/docusign";
+import { encryptFile, decryptFile, generateSessionKey, uploadToIPFS, fetchFromIPFS } from "./managed/encryption";
 import { AgreementCertificate } from "./components/AgreementCertificate";
 
 // Types
@@ -182,6 +183,30 @@ function App() {
     const req = parseInt(searchParams.get('req') || '2');
     const count = parseInt(searchParams.get('count') || '1');
     
+    // IPFS encrypted file handling
+    const ipfsCid = searchParams.get('cid');
+    const sessionKey = searchParams.get('key');
+    const fileName = searchParams.get('fname');
+    
+    const handleIPFS = async () => {
+      if (ipfsCid && sessionKey && fileName) {
+        setState("proving"); // Use proving as loading state
+        try {
+          const encryptedBlob = await fetchFromIPFS(ipfsCid);
+          const decryptedFile = await decryptFile(encryptedBlob, sessionKey, decodeURIComponent(fileName));
+          setSelectedFile(decryptedFile);
+        } catch (err) {
+          console.error("Failed to fetch/decrypt file:", err);
+        }
+        setState("second-sign");
+      }
+    };
+    
+    if (ipfsCid && sessionKey) {
+      handleIPFS();
+      return;
+    }
+    
     if (docId) {
       setRequiredSigners(req);
       setMultiSignerSession({
@@ -209,6 +234,16 @@ function App() {
     
     setState("proving");
     try {
+      // Encrypt and upload to IPFS
+      const sessionKey = generateSessionKey(16);
+      const encryptedFile = await encryptFile(selectedFile, sessionKey);
+      let ipfsCid = '';
+      try {
+        ipfsCid = await uploadToIPFS(encryptedFile);
+      } catch (uploadErr) {
+        console.warn('IPFS upload failed, continuing without it:', uploadErr);
+      }
+      
       const documentHash = await sha256(await selectedFile.arrayBuffer());
       const docId = `doc_${Date.now()}_${randomHex(8)}`;
       await createProof(documentHash, accountId || "", docId);
@@ -218,7 +253,10 @@ function App() {
       
       // FIRST INVITE LINK LOGIC
       const baseLink = generateInviteLink(docId);
-      const linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=2';
+      let linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=2';
+      if (ipfsCid) {
+        linkWithParams += '&cid=' + ipfsCid + '&key=' + sessionKey + '&fname=' + encodeURIComponent(selectedFile.name);
+      }
       setInviteLink(linkWithParams);
       
       let txHash = `zk_${Date.now()}_${randomHex(16)}`;
