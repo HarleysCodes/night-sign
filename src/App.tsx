@@ -191,10 +191,10 @@ function FileDropzone({
           </svg>
         </div>
         <div className="text-center">
-          <p className="text-sm font-medium text-white">
-            Drop your PDF here, or <span className="text-cyan-400">browse</span>
+          <p className="text-sm font-medium text-slate-700 dark:text-white">
+            Drop your PDF here, or <span className="text-cyan-600 dark:text-cyan-400">browse</span>
           </p>
-          <p className="mt-1 text-xs text-white/40">
+          <p className="mt-1 text-xs text-slate-500 dark:text-white/40">
             Maximum 10MB
           </p>
         </div>

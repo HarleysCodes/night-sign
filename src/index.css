@@ -9,31 +9,20 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   
-  /* Dark mode by default */
-  .dark body,
-  body.dark {
-    @apply bg-midnight-950 text-white;
+  /* Dark mode override */
+  .dark body {
+    @apply bg-[#020617] text-white;
   }
 }
 
 /* Aerodrome-style Glass Card */
 @layer components {
   .glass-card {
-    @apply bg-white dark:bg-white/[0.03] backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
-    border-top: 1px solid rgba(0, 243, 255, 0.2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(0, 243, 255, 0.05);
-  }
-
-  .dark .glass-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-    border-top: 1px solid rgba(0, 243, 255, 0.2);
-    border-left: 1px solid rgba(0, 243, 255, 0.1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 243, 255, 0.05);
+    @apply bg-white/90 backdrop-blur-lg border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl;
   }
 
   .glass-card-hover {
@@ -41,7 +30,7 @@
   }
 
   .glass-card-hover:hover {
-    @apply bg-white/10 dark:bg-white/[0.05] border-white/10 dark:border-white/20;
+    @apply shadow-2xl;
     box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
   }
 }
@@ -52,9 +41,12 @@
     @apply relative px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300;
     background: rgba(0, 243, 255, 0.1);
     border: 1px solid rgba(0, 243, 255, 0.4);
-    color: #00f3ff;
+    color: #0891b2;
     box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.15);
-    overflow: hidden;
+  }
+  
+  .dark .neon-button {
+    color: #00f3ff;
   }
 
   .neon-button::before {
@@ -88,9 +80,13 @@
 /* Glass Input */
 @layer components {
   .glass-input {
-    @apply w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25;
+    @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400;
     @apply focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/20;
     @apply transition-all duration-200;
+  }
+  
+  .dark .glass-input {
+    @apply bg-white/[0.03] border-white/10 text-white placeholder-white/25;
   }
 }
 
@@ -113,6 +109,11 @@
 @layer components {
   .dropzone {
     @apply relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer;
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  .dark .dropzone {
     border-color: rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.01);
   }
@@ -130,7 +131,7 @@
 /* Progress Bar */
 @layer components {
   .progress-neon {
-    @apply h-1.5 rounded-full bg-white/10 overflow-hidden;
+    @apply h-1.5 rounded-full bg-slate-200 dark:bg-white/10 overflow-hidden;
   }
 
   .progress-neon-fill {
@@ -167,10 +168,18 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 3px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
