@@ -207,6 +207,7 @@ function App() {
             setSelectedFile(decryptedFile);
             setAutoLoaded(true);
             setIsFetchingDoc(false);
+            setState("second-sign");
           }, 100);
         } catch (err) {
           console.error("Failed to fetch/decrypt file:", err);
