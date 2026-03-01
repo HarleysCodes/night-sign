@@ -188,7 +188,7 @@ function App() {
     const docId = queryDocId || pathDocId;
     
     const req = parseInt(searchParams.get('req') || '2');
-    const count = parseInt(searchParams.get('count') || '1');
+    const count = parseInt(searchParams.get("count") || "0");
     
     // IPFS encrypted file handling
     const ipfsCid = searchParams.get('cid');
