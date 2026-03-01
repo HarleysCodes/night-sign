@@ -61,15 +61,15 @@ function Navbar({
   onClearError: () => void;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4">
-        <div className="flex items-center gap-3">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 bg-black/60 backdrop-blur-md">
+      <div className="mx-auto flex h-full max-w-4xl items-center justify-between px-4">
+        <div className="flex items-center" style={{ marginLeft: '-12px' }}>
           <img 
             src="/logo.png" 
             alt="NightSign" 
-            className="h-14 w-auto"
+            className="w-auto"
             style={{ 
-              height: '56px',
+              height: '72px',
               filter: 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
             }}
           />
@@ -780,7 +780,7 @@ function App() {
         onClearError={clearWalletError}
       />
       
-      <main className="pt-24 pb-12">
+      <main className="pt-28 pb-12">
         <div className="mx-auto max-w-xl px-4">
           {/* Header */}
           <div className="mb-12 text-center">

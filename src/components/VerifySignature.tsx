@@ -129,26 +129,29 @@ export function VerifySignature() {
   return (
     <div className="space-bg min-h-screen">
       {/* Header */}
-      <header className="border-b border-white/5 bg-midnight-900/50 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <a href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600">
-              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold text-white">NightSign</span>
+      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 bg-black/60 backdrop-blur-md">
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
+          <a href="/" className="flex items-center" style={{ marginLeft: '-12px' }}>
+            <img 
+              src="/logo.png" 
+              alt="NightSign" 
+              className="w-auto"
+              style={{ 
+                height: '72px',
+                filter: 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
+              }}
+            />
           </a>
           <nav className="flex items-center gap-6">
-            <a href="/" className="text-sm text-white/60 hover:text-white transition-colors">
-              Sign Document
+            <a href="/" className="text-sm text-white/50 hover:text-cyan-400 transition-colors font-medium">
+              Sign
             </a>
-            <span className="text-sm text-cyan-400">Verify Signature</span>
+            <span className="text-sm text-cyan-400 font-medium">Verify</span>
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-4 py-12">
+      <main className="pt-28 mx-auto max-w-2xl px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
