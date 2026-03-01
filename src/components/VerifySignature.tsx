@@ -129,27 +129,25 @@ export function VerifySignature() {
   return (
     <div className="space-bg min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-[#020617]">
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
-          <a href="/" className="flex items-center" style={{ marginLeft: '-12px' }}>
-            <img 
-              src="/logo.png" 
-              alt="NightSign" 
-              className="w-auto"
-              style={{ 
-                height: '72px',
-                filter: 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
-              }}
-            />
-          </a>
-          <nav className="flex items-center gap-6">
-            <a href="/" className="text-sm text-slate-600 dark:text-white/50 hover:text-cyan-400 transition-colors font-medium">
-              Sign
-            </a>
-            <span className="text-sm text-cyan-400 font-medium">Verify</span>
-          </nav>
+      <nav className="w-full flex justify-between items-center px-6 py-4 bg-white dark:bg-[#020617] border-b border-slate-200 dark:border-white/10 transition-colors duration-300">
+        <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
+          <img 
+            src="/logo.png" 
+            alt="NightSign" 
+            className="h-14 -ml-3"
+            style={{ filter: 'brightness(0) invert(1)' }}
+          />
         </div>
-      </header>
+        <div className="flex gap-6 items-center">
+          <button 
+            onClick={() => window.location.href='/'} 
+            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+          >
+            Sign Document
+          </button>
+          <span className="text-cyan-600 dark:text-cyan-400 font-semibold">Verify Signature</span>
+        </div>
+      </nav>
 
       <main className="pt-28 mx-auto max-w-2xl px-4 py-12">
         <motion.div
