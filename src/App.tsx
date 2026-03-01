@@ -268,7 +268,7 @@ function App() {
       
       // FIRST INVITE LINK LOGIC
       const baseLink = generateInviteLink(docId);
-      let linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=2';
+      let linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=1';
       if (ipfsCid) {
         linkWithParams += '&cid=' + ipfsCid + '&key=' + sessionKey + '&fname=' + encodeURIComponent(selectedFile.name);
       }
@@ -312,7 +312,7 @@ function App() {
       // CHAINED INVITE LINK LOGIC
       if (!isComplete) {
         const baseLink = generateInviteLink(docId);
-        const nextLink = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + required + '&count=' + (newSignersList.length + 1);
+        const nextLink = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + required + '&count=' + (newSignersList.length);
         setInviteLink(nextLink);
       }
       
