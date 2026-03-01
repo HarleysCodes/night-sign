@@ -435,12 +435,26 @@ function App() {
   
   // Check URL for session ID (second signer flow)
   useEffect(() => {
-    // Check both path and query params
-    const urlParams = new URLSearchParams(window.location.search);
-    const pathDocId = window.location.pathname.match(/\/sign\/([a-zA-Z0-9_]+)/);
-    const queryDocId = urlParams.get('doc_id');
+    // Debug: Log current URL params
+    console.log("Current URL:", window.location.href);
+    console.log("Current URL Params:", window.location.search);
+    console.log("Current Path:", window.location.pathname);
     
-    const docId = pathDocId?.[1] || queryDocId;
+    // Robust URL parsing - handle Vercel deployment edge cases
+    const url = window.location.href;
+    const urlObj = new URL(url);
+    const searchParams = urlObj.searchParams;
+    
+    // Try multiple sources for doc_id
+    const queryDocId = searchParams.get('doc_id');
+    const pathDocId = window.location.pathname.match(/\/sign\/([a-zA-Z0-9_]+)/)?.[1];
+    const trailingDocId = window.location.pathname.match(/\/([a-zA-Z0-9_]+)\/?$/)?.[1];
+    
+    // Prefer: query param > /sign/:id > trailing id
+    const docId = queryDocId || pathDocId || trailingDocId;
+    
+    console.log("Extracted docId:", docId);
+    console.log("Query:", queryDocId, "Path:", pathDocId, "Trailing:", trailingDocId);
     
     if (docId) {
       console.log("🔗 Second signer detected for docId:", docId);
