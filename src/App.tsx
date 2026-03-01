@@ -714,7 +714,7 @@ function App() {
       const updatedSession = {
         ...multiSignerSession,
         signers: [...(multiSignerSession?.signers || []), accountId || "signer-2"],
-        isFullyExecuted: true
+        isFullyExecuted: newSignersList.length === required
       };
       setMultiSignerSession(updatedSession);
       
