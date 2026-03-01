@@ -94,18 +94,23 @@ ${data.txHash}
     >
       {/* Certificate Header */}
       <div className="relative mb-8">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20 blur-3xl" />
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20 blur-3xl"
+          style={{
+            animation: 'pulse 3s ease-in-out infinite',
+          }}
+        />
         <div className="relative">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", duration: 0.8 }}
-            className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600"
+            className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 shadow-lg shadow-cyan-500/30"
           >
             <svg className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138z" />
             </svg>
-          </motion.div>
+         -3.138 </motion.div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
             Agreement Fully Executed
           </h2>
@@ -165,7 +170,7 @@ ${data.txHash}
             {/* Signer 1 */}
             <div className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
-                <svg className="h-5 w-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -173,13 +178,13 @@ ${data.txHash}
                 <p className="text-xs text-white/40">Signer 1</p>
                 <p className="font-mono text-sm text-cyan-400">{data.signerId}</p>
               </div>
-              <span className="text-xs text-emerald-400">Verified</span>
+              <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
             </div>
             
             {/* Signer 2 */}
             <div className="flex items-center gap-3 p-3 rounded-lg bg-black/20">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
-                <svg className="h-5 w-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: 'rgba(16, 185, 129, 0.15)' }}>
+                <svg className="h-5 w-5" style={{ color: '#10b981', filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.6))' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -187,7 +192,7 @@ ${data.txHash}
                 <p className="text-xs text-white/40">Signer 2</p>
                 <p className="font-mono text-sm text-cyan-400">0x...verified</p>
               </div>
-              <span className="text-xs text-emerald-400">Verified</span>
+              <span className="text-xs font-medium" style={{ color: '#10b981' }}>Verified</span>
             </div>
           </div>
         </div>

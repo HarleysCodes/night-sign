@@ -61,14 +61,17 @@ function Navbar({
   onClearError: () => void;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <img 
             src="/logo.png" 
             alt="NightSign" 
-            className="h-10 w-auto"
-            style={{ height: '40px' }}
+            className="h-14 w-auto"
+            style={{ 
+              height: '56px',
+              filter: 'brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2))'
+            }}
           />
         </div>
         
