@@ -115,7 +115,7 @@ function Navbar({
               className="flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 px-3 py-1.5"
             >
               <span className="text-xs text-red-400">{error}</span>
-              <button onClick={onClearError} className="text-slate-400 dark:text-white/50 hover:text-slate-600 dark:hover:text-white">
+              <button onClick={onClearError} className="text-slate-400 dark:text-white/50 hover:text-slate-600 dark:hover:text-slate-900 dark:text-white">
                 ✕
               </button>
             </motion.div>
@@ -139,7 +139,7 @@ function Navbar({
           {isConnected ? (
             <button 
               onClick={() => window.location.reload()}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-white/10"
+              className="rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 px-3 py-1.5 text-xs text-slate-700 dark:text-white/70 hover:bg-slate-200 dark:hover:bg-white/10"
             >
               Disconnect
             </button>
@@ -191,7 +191,7 @@ function FileDropzone({
           </svg>
         </div>
         <div className="text-center">
-          <p className="text-sm font-medium text-slate-700 dark:text-white">
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-900 dark:text-white">
             Drop your PDF here, or <span className="text-cyan-600 dark:text-cyan-400">browse</span>
           </p>
           <p className="mt-1 text-xs text-slate-500 dark:text-white/40">
@@ -220,7 +220,7 @@ function ProvingView() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
         </motion.div>
-        <h3 className="text-xl font-bold text-white">Generating Zero-Knowledge Proof</h3>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Generating Zero-Knowledge Proof</h3>
         <p className="mt-2 text-sm text-white/50">
           Confirm in your Midnight wallet to sign & submit
         </p>
@@ -303,7 +303,7 @@ on the Midnight blockchain network.
         </svg>
       </motion.div>
       
-      <h3 className="text-xl font-bold text-white">Document Signed!</h3>
+      <h3 className="text-xl font-bold text-slate-900 dark:text-white">Document Signed!</h3>
       <p className="mt-2 text-sm text-white/50">
         Your zero-knowledge proof has been submitted to Midnight.
       </p>
@@ -926,7 +926,7 @@ function App() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         </div>
-                        <p className="text-lg font-medium text-white">{selectedFile.name}</p>
+                        <p className="text-lg font-medium text-slate-900 dark:text-white">{selectedFile.name}</p>
                         <p className="text-sm text-white/40">
                           {(selectedFile.size / 1024).toFixed(1)} KB
                         </p>
@@ -1047,7 +1047,7 @@ function App() {
                       <svg className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                      <span className="text-xl font-bold text-white">Welcome Signer 2!</span>
+                      <span className="text-xl font-bold text-slate-900 dark:text-white">Welcome Signer 2!</span>
                     </div>
                     <p className="text-purple-300">
                       You are joining a secure Midnight session
