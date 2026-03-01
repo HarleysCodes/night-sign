@@ -52,11 +52,6 @@ function FileDropzone({ onFileSelect, isDragging }: { onFileSelect: (file: File)
   const inputRef = useRef<HTMLInputElement>(null);
   const handleClick = () => inputRef.current?.click();
 
-  // Loading state for signers 2+ while file is being fetched
-  if (currentSignerCount > 0 && !selectedFile) {
-    return <div className="min-h-screen bg-[#050a10] flex items-center justify-center text-white flex-col gap-4"><div className="text-2xl">🔓</div><div>Unlocking Private Boardroom Document...</div></div>;
-  }
-
   return (
     <div onClick={handleClick} className={`dropzone p-12 ${isDragging ? "active" : ""}`}>
       <input ref={inputRef} type="file" accept="application/pdf" onChange={(e) => e.target.files?.[0] && onFileSelect(e.target.files[0])} className="hidden" />
@@ -178,6 +173,11 @@ function App() {
   const params = new URLSearchParams(window.location.search);
   const urlDocId = params.get("doc_id");
   const currentSignerCount = parseInt(params.get("count") || "0", 10);
+
+  // Loading state for signers 2+ while file is being fetched
+  if (currentSignerCount > 0 && !selectedFile) {
+    return <div className="min-h-screen bg-[#050a10] flex items-center justify-center text-white flex-col gap-4"><div className="text-2xl">🔓</div><div>Unlocking Private Boardroom Document...</div></div>;
+  }
 
   useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
