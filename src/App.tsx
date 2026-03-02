@@ -165,7 +165,9 @@ function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [signedData, setSignedData] = useState<SignedDocument | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [requiredSigners, setRequiredSigners] = useState(2);
+  // Initialize required signers from URL or default to 2
+  const urlReq = parseInt(params.get("req") || "2", 10);
+  const [requiredSigners, setRequiredSigners] = useState(urlReq);
   const [multiSignerSession, setMultiSignerSession] = useState<MultiSignerSession | null>(null);
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
@@ -317,7 +319,7 @@ function App() {
       // CHAINED INVITE LINK LOGIC
       if (!isComplete) {
         const baseLink = generateInviteLink(docId);
-        const nextLink = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + required + '&count=' + (newSignersList.length);
+        const nextLink = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + required + '&count=' + (currentSignerCount + 1);
         setInviteLink(nextLink);
       }
       
