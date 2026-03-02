@@ -348,14 +348,14 @@ function App() {
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
       <nav className="w-full flex justify-between items-center px-6 py-4 bg-[#050a10] border-b border-gray-800 text-white sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
-          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all" />
+          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all" />
         </div>
         <div className="flex gap-6 items-center">
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10 focus:outline-none">
             {isDarkMode ? <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg> : <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>}
           </button>
           <span className="text-cyan-600 dark:text-cyan-400 font-semibold border-b-2 border-cyan-500 pb-1 mr-2">Sign Document</span>
-          <button onClick={() => window.location.href='/verify'} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium mr-2">Verify Signature</button>
+          <button onClick={() => window.location.href='/verify'} className="text-white dark:text-white hover:text-slate-900 dark:hover:text-white transition-colors font-medium mr-2">Verify Signature</button>
           <span className="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold tracking-wide border border-emerald-200 dark:border-emerald-500/30">Testnet</span>
           {isConnected ? (
              <div className="flex items-center gap-3">
