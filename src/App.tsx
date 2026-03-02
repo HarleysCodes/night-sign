@@ -296,7 +296,7 @@ function App() {
       setCurrentSignerCount(prev => prev + 1);
       setState("signed");
     } catch (error) { setState("upload"); }
-  }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession, requiredSigners]);
+  }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession, requiredSigners, currentSignerCount]);
 
   const handleSecondSignerSign = useCallback(async () => {
     if (!isConnected) { await connectWallet(); return; }
@@ -348,7 +348,7 @@ function App() {
       });
       setState("signed");
     } catch (error) { setState("second-sign"); }
-  }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, signDocument]);
+  }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, signDocument, currentSignerCount]);
 
   const handleCopyLink = () => { navigator.clipboard.writeText(inviteLink); setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000); };
   const canSign = (isConnected || multiSignerSession?.isSecondSigner) && selectedFile && (state !== "signed");
