@@ -169,7 +169,9 @@ function App() {
   // Parse URL parameters FIRST
   const searchParams = new URLSearchParams(window.location.search);
   const parsedReq = parseInt(searchParams.get("req") || "2", 10);
-  const currentSignerCount = parseInt(searchParams.get("count") || "0", 10);
+  // Initialize currentSignerCount from URL, can be updated after signing
+  const urlSignerCount = parseInt(searchParams.get("count") || "0", 10);
+  const [currentSignerCount, setCurrentSignerCount] = useState(urlSignerCount);
 
   // Initialize state using parsed values
   const [requiredSigners, setRequiredSigners] = useState(parsedReq);
@@ -278,7 +280,7 @@ function App() {
       
       // FIRST INVITE LINK LOGIC
       const baseLink = generateInviteLink(docId);
-      let linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=1';
+      let linkWithParams = baseLink + (baseLink.includes('?') ? '&' : '?') + 'req=' + requiredSigners + '&count=' + (currentSignerCount + 1);
       if (ipfsCid) {
         linkWithParams += '&cid=' + ipfsCid + '&key=' + sessionKey + '&fname=' + encodeURIComponent(selectedFile.name);
       }
@@ -290,6 +292,7 @@ function App() {
       }
       
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
+      setCurrentSignerCount(prev => prev + 1);
       setState("signed");
     } catch (error) { setState("upload"); }
   }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession, requiredSigners]);
