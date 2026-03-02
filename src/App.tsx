@@ -130,9 +130,10 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
 }
 
 function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
+  const totalPipelineSteps = requiredSigners + 1;
   const steps = [
     { step: 1, label: "Document Anchored" },
-    ...Array.from({ length: requiredSigners - 1 }, (_, i) => ({
+    ...Array.from({ length: requiredSigners }, (_, i) => ({
       step: i + 2, label: i === requiredSigners - 2 ? "All Signers Verified" : `Signer ${i + 2}`
     }))
   ];
@@ -342,7 +343,7 @@ function App() {
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
-      <nav className="w-full flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-white/5 backdrop-blur-md border-b border-slate-200 dark:border-white/10 sticky top-0 z-50">
+      <nav className="w-full flex justify-between items-center px-6 py-4 bg-black/80 dark:bg-black/60 backdrop-blur-md border-b border-slate-200 dark:border-white/10 sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
           <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all" />
         </div>
