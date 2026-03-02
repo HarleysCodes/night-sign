@@ -346,16 +346,16 @@ function App() {
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
-      <nav className="w-full flex justify-between items-center px-6 py-4 bg-[#050a10] border-b border-gray-800 text-white sticky top-0 z-50">
+      <nav className="w-full flex justify-between items-center px-6 py-4 bg-white dark:bg-[#050a10] border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
-          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 brightness(0) invert(1) drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all" />
+          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert transition-all" />
         </div>
         <div className="flex gap-6 items-center">
-          <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full text-white hover:bg-white/10 dark:hover:bg-white/10 focus:outline-none">
+          <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 dark:hover:bg-white/10 focus:outline-none">
             {isDarkMode ? <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg> : <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>}
           </button>
           <span className="text-cyan-600 dark:text-cyan-400 font-semibold border-b-2 border-cyan-500 pb-1 mr-2">Sign Document</span>
-          <button onClick={() => window.location.href='/verify'} className="text-white dark:text-white hover:text-slate-900 dark:hover:text-white transition-colors font-medium mr-2">Verify Signature</button>
+          <button onClick={() => window.location.href='/verify'} className="text-gray-600 dark:text-white hover:text-gray-900 dark:hover:text-white transition-colors font-medium mr-2">Verify Signature</button>
           <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold tracking-wide border border-emerald-200 dark:border-emerald-500/30">Testnet</span>
           {isConnected ? (
              <div className="flex items-center gap-3">
@@ -376,7 +376,7 @@ function App() {
           {state === "upload" && !selectedFile && !multiSignerSession?.isSecondSigner && (
             <div className="mb-6 p-4 glass-card">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium text-white/70">Number of Signers Required</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-white/70">Number of Signers Required</label>
                 <span className="text-2xl font-bold text-cyan-400">{requiredSigners}</span>
               </div>
               <input type="range" min="1" max="5" value={requiredSigners} onChange={(e) => setRequiredSigners(parseInt(e.target.value))} className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
