@@ -93,7 +93,7 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
         <svg className="h-10 w-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
       </motion.div>
       <h3 className="text-xl font-bold text-slate-900 dark:text-white">Document Signed!</h3>
-      <p className="mt-2 text-sm text-slate-600 dark:text-white/50">Your zero-knowledge proof has been submitted to Midnight.</p>
+      <p className="mt-2 text-sm text-slate-600 dark:text-gray-600 dark:text-gray-300">Your zero-knowledge proof has been submitted to Midnight.</p>
       
       <div className="mt-8 space-y-4 text-left">
         <div className="glass-card p-4"><label className="text-xs text-slate-600 dark:text-white/40">Document Name</label><p className="mt-1 text-sm text-white font-medium">{data.documentName}</p></div>
