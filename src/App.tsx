@@ -368,13 +368,13 @@ function App() {
       </nav>
       
       <main className="pt-28 pb-12">
-        <div className="mx-auto max-w-xl px-4">
-          <div className="mb-12 text-center">
+        <div className="mx-auto max-w-xl px-4 flex flex-col gap-6">
+          <div className="mb-8 text-center">
             <h1 className="text-4xl font-bold text-slate-900 dark:text-white">Zero-Knowledge <span className="text-cyan-600 dark:text-cyan-400">Document Signing</span></h1>
           </div>
 
           {state === "upload" && !selectedFile && !multiSignerSession?.isSecondSigner && (
-            <div className="mb-6 p-4 glass-card">
+            <div className="mb-6 p-6 glass-card">
               <div className="flex items-center justify-between mb-3">
                 <label className="text-sm font-medium text-gray-700 dark:text-white/70">Number of Signers Required</label>
                 <span className="text-2xl font-bold text-cyan-400">{requiredSigners}</span>
