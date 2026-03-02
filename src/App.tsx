@@ -80,7 +80,7 @@ function ProvingView() {
           </svg>
         </motion.div>
         <h3 className="text-xl font-bold text-slate-900 dark:text-white">Generating Zero-Knowledge Proof</h3>
-        <p className="mt-2 text-sm text-slate-600 dark:text-white/50">Confirm in your Midnight wallet to sign & submit</p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-gray-700 dark:text-gray-300">Confirm in your Midnight wallet to sign & submit</p>
       </div>
     </motion.div>
   );
@@ -103,7 +103,7 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
           <div className="glass-card p-4">
             <label className="text-xs text-slate-600 dark:text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
-              <div className="flex-1 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-slate-200 dark:bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min((data.signatureCount / requiredSigners) * 100, 100)}%` }} />
               </div>
               <span className="text-sm text-cyan-600 dark:text-cyan-400">{data.signatureCount}/{requiredSigners}</span>
@@ -147,7 +147,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
         <div key={s.step} className="flex items-center">
           <div className="flex flex-col items-center">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${currentStep >= s.step ? 'bg-gradient-to-br from-cyan-500 to-purple-600 border-cyan-400' : 'bg-white/5 border-white/20'}`}>
-              <span className="text-white font-bold">{s.step}</span>
+              <span className="text-gray-900 dark:text-white font-bold">{s.step}</span>
             </div>
             <p className="mt-2 text-xs font-medium text-white/50">{s.label}</p>
           </div>
@@ -348,7 +348,7 @@ function App() {
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
       <nav className="w-full flex justify-between items-center px-6 py-4 bg-white dark:bg-[#050a10] border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
-          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 dark:invert transition-all" />
+          <img src="/logo.png" alt="NightSign" className="h-16 w-auto -ml-3 dark:invert transition-all" />
         </div>
         <div className="flex gap-6 items-center">
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 dark:hover:bg-white/10 focus:outline-none">
