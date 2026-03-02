@@ -86,7 +86,7 @@ function ProvingView() {
   );
 }
 
-function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, requiredSigners = 2 }: any) {
+function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, requiredSigners = 2, currentSignerCount = 0 }: any) {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", duration: 0.5 }} className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-500/10">
@@ -104,9 +104,9 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
             <label className="text-xs text-slate-600 dark:text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 h-2 bg-slate-200 dark:bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min((currentSignerCount / requiredSigners) * 100, 100)}%` }} />
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min(((data.signatureCount || currentSignerCount) / requiredSigners) * 100, 100)}%` }} />
               </div>
-              <span className="text-sm text-cyan-600 dark:text-cyan-400">{currentSignerCount}/{requiredSigners}</span>
+              <span className="text-sm text-cyan-600 dark:text-cyan-400">{data.signatureCount || currentSignerCount}/{requiredSigners}</span>
             </div>
           </div>
         )}
@@ -437,7 +437,7 @@ function App() {
               )}
               {state === "signed" && signedData && (
                 <motion.div key="signed">
-                  {signedData.isFullyExecuted ? <AgreementCertificate data={signedData} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} /> : <SignedView data={signedData} inviteLink={inviteLink} onCopyLink={handleCopyLink} copiedLink={copiedLink} requiredSigners={requiredSigners} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} />}
+                  {signedData.isFullyExecuted ? <AgreementCertificate data={signedData} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} /> : <SignedView data={signedData} inviteLink={inviteLink} onCopyLink={handleCopyLink} copiedLink={copiedLink} requiredSigners={requiredSigners} currentSignerCount={currentSignerCount} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} />}
                 </motion.div>
               )}
             </AnimatePresence>
