@@ -166,8 +166,13 @@ function App() {
   const [signedData, setSignedData] = useState<SignedDocument | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
   // Initialize required signers from URL or default to 2
-  const urlReq = parseInt(params.get("req") || "2", 10);
-  const [requiredSigners, setRequiredSigners] = useState(urlReq);
+  // Parse URL parameters FIRST
+  const searchParams = new URLSearchParams(window.location.search);
+  const parsedReq = parseInt(searchParams.get("req") || "2", 10);
+  const currentSignerCount = parseInt(searchParams.get("count") || "0", 10);
+
+  // Initialize state using parsed values
+  const [requiredSigners, setRequiredSigners] = useState(parsedReq);
   const [multiSignerSession, setMultiSignerSession] = useState<MultiSignerSession | null>(null);
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
@@ -175,11 +180,9 @@ function App() {
   const [autoLoaded, setAutoLoaded] = useState(false);
     const [isFetchingDoc, setIsFetchingDoc] = useState(false);
 
-  // Simple URL parsing
-  const params = new URLSearchParams(window.location.search);
-  const urlDocId = params.get("doc_id");
-  const currentSignerCount = parseInt(params.get("count") || "0", 10);
-  const totalPipelineSteps = requiredSigners;
+  // URL parsing already done above
+  const urlDocId = searchParams.get("doc_id");
+  const totalPipelineSteps = requiredSigners + 1;
 
     useEffect(() => {
     if (isDarkMode) document.documentElement.classList.add('dark');
