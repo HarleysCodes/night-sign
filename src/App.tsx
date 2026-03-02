@@ -404,7 +404,7 @@ function App() {
               )}
               {state === "identity-check" && <motion.div key="id" className="text-center text-white p-8">Verifying VC Identity...</motion.div>}
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
-              {currentSignerCount > 0 || state === "second-sign" && (
+              {(currentSignerCount > 0 || state === "second-sign") && (
                 <motion.div key="second" className="text-center p-8 text-white">
                   <h2 className="text-xl font-bold mb-4">Signer {currentSignerCount + 1} / {multiSignerSession?.requiredSigners}</h2>
                   {isFetchingDoc && (
