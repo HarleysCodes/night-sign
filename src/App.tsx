@@ -104,9 +104,9 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
             <label className="text-xs text-slate-600 dark:text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 h-2 bg-slate-200 dark:bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min((data.signatureCount / requiredSigners) * 100, 100)}%` }} />
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min((currentSignerCount / requiredSigners) * 100, 100)}%` }} />
               </div>
-              <span className="text-sm text-cyan-600 dark:text-cyan-400">{data.signatureCount}/{requiredSigners}</span>
+              <span className="text-sm text-cyan-600 dark:text-cyan-400">{currentSignerCount}/{requiredSigners}</span>
             </div>
           </div>
         )}
@@ -292,6 +292,7 @@ function App() {
       }
       
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
+      setCurrentSignerCount(prev => prev + 1);
       setCurrentSignerCount(prev => prev + 1);
       setState("signed");
     } catch (error) { setState("upload"); }
