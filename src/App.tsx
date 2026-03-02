@@ -293,7 +293,6 @@ function App() {
       
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
-      setCurrentSignerCount(prev => prev + 1);
       setState("signed");
     } catch (error) { setState("upload"); }
   }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession, requiredSigners, currentSignerCount]);
@@ -415,7 +414,7 @@ function App() {
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
               {(currentSignerCount > 0 || state === "second-sign") && (
                 <motion.div key="second" className="text-center p-8 text-white">
-                  <h2 className="text-xl font-bold mb-4">Signer {currentSignerCount + 1} / {multiSignerSession?.requiredSigners}</h2>
+                  <h2 className="text-xl font-bold mb-4">Signer {Number(currentSignerCount) + 1} / {requiredSigners}</h2>
                   {isFetchingDoc && (
                     <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                       <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
