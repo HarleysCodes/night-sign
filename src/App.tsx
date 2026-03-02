@@ -99,12 +99,12 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
         <div className="glass-card p-4"><label className="text-xs text-slate-600 dark:text-white/40">Document Name</label><p className="mt-1 text-sm text-white font-medium">{data.documentName}</p></div>
         <div className="glass-card p-4"><label className="text-xs text-slate-600 dark:text-white/40">ZK-Proof String</label><div className="mt-1 max-h-20 overflow-y-auto rounded bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 p-2 font-mono text-xs text-purple-600 dark:text-purple-400">{data.txHash.substring(0, 64)}...</div></div>
         
-        {data.signatureCount !== undefined && (
+        {currentSignerCount > 0 && (
           <div className="glass-card p-4">
             <label className="text-xs text-slate-600 dark:text-white/40">Signature Progress</label>
             <div className="mt-2 flex items-center gap-3">
               <div className="flex-1 h-2 bg-slate-200 dark:bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min(((data.signatureCount || currentSignerCount) / requiredSigners) * 100, 100)}%` }} />
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min(((currentSignerCount) / requiredSigners) * 100, 100)}%` }} />
               </div>
               <span className="text-sm text-cyan-600 dark:text-cyan-400">{data.signatureCount || currentSignerCount}/{requiredSigners}</span>
             </div>
