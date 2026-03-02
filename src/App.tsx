@@ -149,7 +149,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
             <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${currentStep >= s.step ? 'bg-gradient-to-br from-cyan-500 to-purple-600 border-cyan-400' : 'bg-white/5 border-white/20'}`}>
               <span className="text-gray-900 dark:text-white font-bold">{s.step}</span>
             </div>
-            <p className="mt-2 text-xs font-medium text-white/50">{s.label}</p>
+            <p className="mt-2 text-sm font-medium text-gray-800 dark:text-gray-300">{s.label}</p>
           </div>
           {i < steps.length - 1 && <div className={`w-12 h-0.5 mx-2 mt-[-20px] ${currentStep > s.step ? 'bg-cyan-500' : 'bg-white/10'}`} />}
         </div>
