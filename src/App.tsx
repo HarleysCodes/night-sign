@@ -348,7 +348,7 @@ function App() {
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
       <nav className="w-full flex justify-between items-center px-6 py-4 bg-[#050a10] border-b border-gray-800 text-white sticky top-0 z-50">
         <div className="flex items-center cursor-pointer" onClick={() => window.location.href='/'}>
-          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all" />
+          <img src="/logo.png" alt="NightSign" className="h-14 -ml-3 brightness(0) invert(1) drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all" />
         </div>
         <div className="flex gap-6 items-center">
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full text-white hover:bg-white/10 dark:hover:bg-white/10 focus:outline-none">
