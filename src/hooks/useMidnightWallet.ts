@@ -188,23 +188,70 @@ export function useMidnightWallet() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Connect (manual retry)
+  // Connect (manual retry) - Real Midnight Lace API
   const connect = useCallback(async () => {
     setState(prev => ({ ...prev, status: "connecting", error: null }));
     
     const win = window as any;
-    if (win.midnight || win.lace) {
-      setState(prev => ({ 
-        ...prev, 
-        status: "connected",
-        isConnected: true 
-      }));
-    } else {
+    
+    // Check for Midnight/Lace extension
+    if (!win.midnight) {
       setState(prev => ({ 
         ...prev, 
         status: "error", 
-        error: "Wallet not found" 
+        error: "Midnight Wallet not installed. Please install the Lace extension." 
       }));
+      return;
+    }
+    
+    try {
+      // Get wallet API - try midnight.mnl first (newer), then lace
+      let api = null;
+      
+      if (win.midnight.mnl) {
+        api = await win.midnight.mnl.enable();
+      } else if (win.midnight.lace) {
+        api = await win.midnight.lace.enable();
+      } else {
+        // Try enable directly on midnight object
+        api = await win.midnight.enable();
+      }
+      
+      if (!api) throw new Error("Failed to enable wallet");
+      
+      setActiveApi(api);
+      
+      // Get address
+      let addr = null;
+      if (api.getUsedAddresses) {
+        const addrs = await api.getUsedAddresses();
+        addr = addrs?.[0];
+      } else if (api.getRewardAddresses) {
+        const addrs = await api.getRewardAddresses();
+        addr = addrs?.[0];
+      }
+      
+      setState(prev => ({ 
+        ...prev, 
+        accountId: addr || "connected",
+        isConnected: true,
+        status: "connected",
+        error: null 
+      }));
+    } catch (error: any) {
+      if (error.message?.includes("rejected") || error.code === 4001) {
+        setState(prev => ({ 
+          ...prev, 
+          status: "error", 
+          error: "Connection rejected by user" 
+        }));
+      } else {
+        setState(prev => ({ 
+          ...prev, 
+          status: "error", 
+          error: error.message || "Failed to connect wallet" 
+        }));
+      }
     }
   }, []);
 
