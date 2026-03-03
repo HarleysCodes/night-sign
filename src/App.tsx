@@ -159,7 +159,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
-  const { isConnected, accountId, connect: connectWallet, signData } = useMidnightWallet();
+  const { isConnected, accountId, connect: connectWallet, submitTransaction } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -288,7 +288,7 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      const signature = await signData(payload);
+      const signature = await submitTransaction(payload);
       
       // IMPORTANT: Only advance if signing succeeded
       if (!signature) {
@@ -341,7 +341,7 @@ function App() {
       
       // Sign with real Midnight wallet - triggers Lace popup!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      let signature = await signData(payload);
+      let signature = await submitTransaction(payload);
       let txHash = signature || `zk_${Date.now()}_${randomHex(16)}`;
       
       
