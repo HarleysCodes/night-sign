@@ -86,7 +86,7 @@ function ProvingView() {
   );
 }
 
-function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, requiredSigners = 2, currentSignerCount = 0 }: any) {
+function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, requiredSigners = 2, currentSignerCount = 0, isComplete = false }: any) {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", duration: 0.5 }} className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-500/10">
@@ -114,7 +114,7 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
       
       <button onClick={onReset} className="mt-6 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-medium text-white transition-colors hover:bg-white/10">Sign Another Document</button>
       
-      {inviteLink && (
+      {inviteLink && !isComplete && (
         <div className="mt-6 p-4 glass-card border border-cyan-500/20">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-cyan-400">Invite Additional Signers</span>
@@ -436,7 +436,7 @@ function App() {
               )}
               {state === "signed" && signedData && (
                 <motion.div key="signed">
-                  {signedData.isFullyExecuted ? <AgreementCertificate data={signedData} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} /> : <SignedView data={signedData} inviteLink={inviteLink} onCopyLink={handleCopyLink} copiedLink={copiedLink} requiredSigners={requiredSigners} currentSignerCount={currentSignerCount} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} />}
+                  {(signedData?.isFullyExecuted || currentSignerCount >= requiredSigners) ? <AgreementCertificate data={signedData} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} /> : <SignedView data={signedData} inviteLink={inviteLink} onCopyLink={handleCopyLink} copiedLink={copiedLink} requiredSigners={requiredSigners} currentSignerCount={currentSignerCount} isComplete={currentSignerCount >= requiredSigners} onReset={() => { setState("upload"); setSelectedFile(null); setSignedData(null); }} />}
                 </motion.div>
               )}
             </AnimatePresence>
