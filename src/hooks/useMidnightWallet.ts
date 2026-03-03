@@ -26,22 +26,26 @@ export const useMidnightWallet = () => {
       // 1. Try all known connection methods dynamically
       if (typeof wallet.connect === 'function') {
         try {
-          api = await wallet.connect('preview');
-        } catch (e1) {
+          api = await wallet.connect('preprod');
+        } catch (e0) {
           try {
-            api = await wallet.connect('undeployed');
-          } catch (e2) {
+            api = await wallet.connect('preview');
+          } catch (e1) {
             try {
-              api = await wallet.connect('TestNet');
-            } catch (e3) {
-              throw new Error("All network connect() attempts rejected.");
+              api = await wallet.connect('undeployed');
+            } catch (e2) {
+              try {
+                api = await wallet.connect('TestNet');
+              } catch (e3) {
+                throw new Error("All network connect() attempts rejected.");
+              }
             }
           }
         }
       } else if (typeof wallet.enable === 'function') {
         api = await wallet.enable();
       } else {
-        api = wallet; // Fallback if wallet IS the api
+        api = wallet;
       }
       
       if (!api) throw new Error("API object is null after connection.");
@@ -74,7 +78,6 @@ export const useMidnightWallet = () => {
       console.error("Wallet connection failed:", error);
       setStatus("error");
       setError(error?.message || JSON.stringify(error));
-      // CRITICAL: Alert the exact error message to the screen
       alert("Connection Error: " + (error?.message || JSON.stringify(error)));
     }
   }, []);
