@@ -63,7 +63,7 @@ export const useMidnightWallet = () => {
   }, []);
 
   // Real transaction submission using Midnight SDK
-  const submitTransaction = useCallback(async (circuitName: string, inputs: any): Promise<string | null> => {
+  const submitTransaction = useCallback(async (circuitName: string, inputs: string): Promise<string | null> => {
     if (!apiRef.current || !accountId) {
       alert("Wallet not connected. Please connect first.");
       return null;

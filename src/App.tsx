@@ -288,7 +288,7 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      const signature = await submitTransaction(payload);
+      const signature = await submitTransaction("sign_document", JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() }));
       
       // IMPORTANT: Only advance if signing succeeded
       if (!signature) {
