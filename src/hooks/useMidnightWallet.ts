@@ -29,14 +29,13 @@ export const useMidnightWallet = () => {
         return;
       }
 
-      // Grab the first available injected provider dynamically
       const walletProvider = providers[0] as any;
       
-      // Trigger the Lace popup
-      const api = await walletProvider.enable();
+      // 1. Use Midnight's .connect() method instead of .enable()
+      const api = await walletProvider.connect();
       
-      // Fetch the address
-      const addresses = await api.state?.getUsedAddresses() || await api.getUsedAddresses();
+      // 2. Use Midnight's shielded address method
+      const addresses = await api.getShieldedAddresses();
       
       if (addresses && addresses.length > 0) {
         setAccountId(addresses[0]);
