@@ -367,7 +367,7 @@ function App() {
           <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold tracking-wide border border-emerald-200 dark:border-emerald-500/30">Testnet</span>
           {accountId && accountId.length > 5 ? (
              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-black/30 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10">{accountId && accountId.length > 5 ? `${accountId.slice(0, 6)}...${accountId.slice(-4)}` : "Wallet"}</span>
+                <span className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-black/30 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10">{accountId && accountId.length > 5 ? `${accountId.slice(0, 6)}...${accountId.slice(-4)}` : "Connect Midnight Wallet"}</span>
              </div>
           ) : (
              <button onClick={connectWallet} className="text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-white px-5 py-2 rounded-lg transition-colors shadow-md shadow-cyan-500/20">Connect Midnight Wallet</button>
