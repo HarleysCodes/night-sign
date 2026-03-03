@@ -1,0 +1,25 @@
+export ledger required Uint
+export ledger current Uint
+export ledger done Bool
+
+constructor req Uint {
+    required = req
+    current = 0
+    done = false
+}
+
+export circuit sign {
+    assert done == false
+    current = current + 1
+    if current == required {
+        done = true
+    }
+}
+
+export circuit getCurrent -> Uint {
+    return current
+}
+
+export circuit isDone -> Bool {
+    return done
+}
