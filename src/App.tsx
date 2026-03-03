@@ -288,7 +288,13 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      const signature = await submitTransaction("sign_document", JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() }));
+      // Create payload object
+      const payloadObj = { docId, documentHash, signer: accountId, timestamp: Date.now() };
+      // Stringify and encode as Uint8Array for SDK
+      const jsonString = JSON.stringify(payloadObj);
+      const encodedPayload = new TextEncoder().encode(jsonString);
+      
+      const signature = await submitTransaction("sign_document", encodedPayload);
       
       // IMPORTANT: Only advance if signing succeeded
       if (!signature) {
