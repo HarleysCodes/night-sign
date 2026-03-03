@@ -15,7 +15,7 @@ export const useMidnightWallet = () => {
       // @ts-ignore
       if (typeof window === 'undefined' || !window.midnight) {
         setStatus("error");
-        setError("Midnight wallet object not found on window.");
+        setError("Midnight wallet object not found.");
         alert("Midnight wallet not detected! Please install the Lace extension.");
         return;
       }
@@ -24,21 +24,34 @@ export const useMidnightWallet = () => {
       const providers = Object.values(window.midnight);
       if (providers.length === 0) {
         setStatus("error");
-        setError("Midnight wallet found, but no provider API is injected.");
-        alert("Midnight wallet found, but no provider API is injected.");
+        setError("No provider API found.");
         return;
       }
 
       const walletProvider = providers[0] as any;
       
-      // 1. Use Midnight's .connect() method instead of .enable()
-      const api = await walletProvider.connect();
+      let api;
+      try {
+        // The Midnight API REQUIRES a network string.
+        api = await walletProvider.connect('TestNet');
+      } catch (e1) {
+        try {
+          api = await walletProvider.connect('preview');
+        } catch (e2) {
+          api = await walletProvider.connect('undeployed');
+        }
+      }
       
-      // 2. Use Midnight's shielded address method
+      if (!api) {
+        alert("Wallet connection rejected. Check Lace network settings.");
+        return;
+      }
+
+      // Midnight's shielded addresses are returned as an object, not an array
       const addresses = await api.getShieldedAddresses();
       
-      if (addresses && addresses.length > 0) {
-        setAccountId(addresses[0]);
+      if (addresses && addresses.shieldedAddress) {
+        setAccountId(addresses.shieldedAddress);
         setIsConnected(true);
         setStatus("connected");
       } else {
