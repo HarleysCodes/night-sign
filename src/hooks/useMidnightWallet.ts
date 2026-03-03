@@ -120,7 +120,7 @@ export function useMidnightWallet() {
         setActiveApi(api);
 
         // Fetch address using Midnight's native shielded methods
-        let userAddress: string = "Connected";
+        let userAddress: string = "";
         
         try {
           // 1. Try official shielded address fetcher
