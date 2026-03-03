@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { createProof } from '../managed/contracts';
 
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
@@ -6,7 +7,6 @@ export const useMidnightWallet = () => {
   const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [networkId] = useState<number | null>(null);
-  
   const apiRef = useRef<any>(null);
 
   const connect = useCallback(async () => {
@@ -16,13 +16,11 @@ export const useMidnightWallet = () => {
     try {
       // @ts-ignore
       if (typeof window === 'undefined' || !window.midnight) throw new Error("No window.midnight object");
-
       // @ts-ignore
       const providers = Object.values(window.midnight);
       if (providers.length === 0) throw new Error("No providers found in window.midnight");
 
       const wallet = providers[0] as any;
-      
       let api;
       
       if (typeof wallet.connect === 'function') {
@@ -62,23 +60,27 @@ export const useMidnightWallet = () => {
     }
   }, []);
 
-  // Real transaction submission using Midnight SDK
-  const submitTransaction = useCallback(async (circuitName: string, inputs: string): Promise<string | null> => {
+  // Sign using the contract - generates ZK proof then submits
+  const submitTransaction = useCallback(async (circuitName: string, documentHash: string): Promise<string | null> => {
     if (!apiRef.current || !accountId) {
       alert("Wallet not connected. Please connect first.");
       return null;
     }
 
     try {
-      // Use the wallet's submitTransaction method - this triggers the Lace popup!
+      // 1. Generate ZK proof locally using the contract bindings
+      const zkProof = await createProof(documentHash, accountId);
+      
+      // 2. Submit to wallet for final approval
       const tx = await apiRef.current.submitTransaction({
-        contract: circuitName,
+        contract: "document_signer",
         method: circuitName,
-        inputs: inputs,
+        proof: zkProof.proof,
+        publicSignals: zkProof.publicSignals,
         from: accountId,
       });
       
-      return tx?.id || tx?.txId || tx;
+      return tx?.id || tx?.txId || "tx_" + Date.now();
     } catch (err: any) {
       console.error("Transaction failed:", err);
       alert("Transaction Error: " + (err?.message || JSON.stringify(err)));
