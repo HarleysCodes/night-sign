@@ -189,71 +189,30 @@ export function useMidnightWallet() {
   }, []);
 
   // Connect (manual retry) - Real Midnight Lace API
-  const connect = useCallback(async () => {
-    setState(prev => ({ ...prev, status: "connecting", error: null }));
-    
-    const win = window as any;
-    
-    // Check for Midnight/Lace extension
-    if (!win.midnight) {
-      setState(prev => ({ 
-        ...prev, 
-        status: "error", 
-        error: "Midnight Wallet not installed. Please install the Lace extension." 
-      }));
-      return;
-    }
-    
+  // Connect - Real Midnight Lace API
+  const connect = async () => {
     try {
-      // Get wallet API - try midnight.mnl first (newer), then lace
-      let api = null;
-      
-      if (win.midnight.mnl) {
-        api = await win.midnight.mnl.enable();
-      } else if (win.midnight.lace) {
-        api = await win.midnight.lace.enable();
-      } else {
-        // Try enable directly on midnight object
-        api = await win.midnight.enable();
+      // 1. Check if the extension exists in the browser
+      // @ts-ignore
+      if (typeof window === 'undefined' || !window.midnight || !window.midnight.mnl) {
+        alert("Midnight Lace wallet extension not detected! Please install and unlock it.");
+        return;
       }
-      
-      if (!api) throw new Error("Failed to enable wallet");
-      
-      setActiveApi(api);
-      
-      // Get address
-      let addr = null;
-      if (api.getUsedAddresses) {
-        const addrs = await api.getUsedAddresses();
-        addr = addrs?.[0];
-      } else if (api.getRewardAddresses) {
-        const addrs = await api.getRewardAddresses();
-        addr = addrs?.[0];
+
+      // 2. Actually trigger the pop-up and wait for the user to approve
+      // @ts-ignore
+      const api = await window.midnight.mnl.enable();
+
+      // 3. Get the real cryptographic address
+      const addresses = await api.state?.getUsedAddresses() || await api.getUsedAddresses();
+      if (addresses && addresses.length > 0) {
+        setState(prev => ({ ...prev, accountId: addresses[0], isConnected: true, status: "connected", error: null }));
       }
-      
-      setState(prev => ({ 
-        ...prev, 
-        accountId: addr || "connected",
-        isConnected: true,
-        status: "connected",
-        error: null 
-      }));
-    } catch (error: any) {
-      if (error.message?.includes("rejected") || error.code === 4001) {
-        setState(prev => ({ 
-          ...prev, 
-          status: "error", 
-          error: "Connection rejected by user" 
-        }));
-      } else {
-        setState(prev => ({ 
-          ...prev, 
-          status: "error", 
-          error: error.message || "Failed to connect wallet" 
-        }));
-      }
+    } catch (error) {
+      console.error("Wallet connection failed:", error);
+      alert("Wallet connection rejected or failed.");
     }
-  }, []);
+  };
 
   // Sign document
   const signDocument = useCallback(async (
