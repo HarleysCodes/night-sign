@@ -391,7 +391,7 @@ function App() {
             </div>
           )}
 
-          <TrustTimeline currentStep={signedData?.isFullyExecuted ? totalPipelineSteps : state === "signed" ? Math.min(requiredSigners - 1, 2) : selectedFile ? 1 : 0} requiredSigners={requiredSigners} />
+          <TrustTimeline currentStep={currentSignerCount + 1} requiredSigners={requiredSigners} />
 
           <motion.div layout className="glass-card p-8" onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={(e) => { e.preventDefault(); setIsDragging(false); const file = e.dataTransfer.files[0]; if (file) setSelectedFile(file); }}>
             <AnimatePresence mode="wait">
