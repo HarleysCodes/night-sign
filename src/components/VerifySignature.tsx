@@ -257,8 +257,7 @@ export function VerifySignature() {
                   {verifyState.result.isValid ? (
                     <>
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
-                        <svg className="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <svg className="h-6 w-6 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div>
@@ -291,8 +290,7 @@ export function VerifySignature() {
                       verifyState.result.disclosures.documentIntegrity ? "bg-emerald-500/10" : "bg-red-500/10"
                     }`}>
                       {verifyState.result.disclosures.documentIntegrity ? (
-                        <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <svg className="h-4 w-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       ) : (
                         <svg className="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,8 +315,7 @@ export function VerifySignature() {
                       verifyState.result.disclosures.signerAuthenticity ? "bg-emerald-500/10" : "bg-red-500/10"
                     }`}>
                       {verifyState.result.disclosures.signerAuthenticity ? (
-                        <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <svg className="h-4 w-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       ) : (
                         <svg className="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -343,8 +340,7 @@ export function VerifySignature() {
                       verifyState.result.disclosures.timestampDisclosure ? "bg-emerald-500/10" : "bg-slate-500/10"
                     }`}>
                       {verifyState.result.disclosures.timestampDisclosure ? (
-                        <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <svg className="h-4 w-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       ) : (
                         <svg className="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
