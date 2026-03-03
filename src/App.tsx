@@ -106,7 +106,7 @@ function SignedView({ data, onReset, inviteLink, onCopyLink, copiedLink, require
               <div className="flex-1 h-2 bg-slate-200 dark:bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500" style={{ width: `${Math.min(((currentSignerCount) / requiredSigners) * 100, 100)}%` }} />
               </div>
-              <span className="text-sm text-cyan-600 dark:text-cyan-400">{data.signatureCount || currentSignerCount}/{requiredSigners}</span>
+              <span className="text-sm text-cyan-600 dark:text-cyan-400">{currentSignerCount}/{requiredSigners}</span>
             </div>
           </div>
         )}
@@ -414,7 +414,7 @@ function App() {
               {state === "proving" && <motion.div key="proving" className="p-8"><ProvingView /></motion.div>}
               {(currentSignerCount > 0 || state === "second-sign") && (
                 <motion.div key="second" className="text-center p-8 text-white">
-                  <h2 className="text-xl font-bold mb-4">Signer {Number(currentSignerCount) + 1} / {requiredSigners}</h2>
+                  <h2 className="text-xl font-bold mb-4">Signer {Math.min(Number(currentSignerCount) + 1, requiredSigners)} / {requiredSigners}</h2>
                   {isFetchingDoc && (
                     <div className="p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-4">
                       <div className="flex items-center justify-center gap-2 text-cyan-400 mb-2">
