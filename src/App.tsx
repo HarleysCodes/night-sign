@@ -159,7 +159,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
-  const { isConnected, accountId, status: walletStatus, error: walletError, connect: connectWallet, signDocument } = useMidnightWallet();
+  const { isConnected, accountId, connect: connectWallet } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -365,7 +365,7 @@ function App() {
           <span className="text-cyan-600 dark:text-cyan-400 font-semibold border-b-2 border-cyan-500 pb-1 mr-2">Sign Document</span>
           <button onClick={() => window.location.href='/verify'} className="text-gray-600 dark:text-white hover:text-gray-900 dark:hover:text-white transition-colors font-medium mr-2">Verify Signature</button>
           <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold tracking-wide border border-emerald-200 dark:border-emerald-500/30">Testnet</span>
-          {isConnected ? (
+          {accountId && accountId.length > 5 ? (
              <div className="flex items-center gap-3">
                 <span className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-black/30 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10">{accountId && accountId.length > 5 ? `${accountId.slice(0, 6)}...${accountId.slice(-4)}` : "Wallet"}</span>
              </div>

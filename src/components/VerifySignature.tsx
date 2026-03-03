@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMidnightWallet, getNetworkName, isCorrectNetwork } from "../hooks/useMidnightWallet";
+import { useMidnightWallet } from "../hooks/useMidnightWallet";
 import { verifyWithDisclosure, VerificationResult, ZKProof } from "../managed/docusign";
 import { sha256 } from "../lib/utils";
 
@@ -21,7 +21,7 @@ export function VerifySignature() {
   const [isDragging, setIsDragging] = useState(false);
   
   // Wallet hook
-  const { isConnected, connect: connectWallet, accountId, status: walletStatus, networkId, error: walletError, clearError } = useMidnightWallet();
+  const { isConnected, connect: connectWallet, accountId, status: walletStatus, networkId, error: walletError, clearError, getNetworkName, isCorrectNetwork } = useMidnightWallet();
   
   // Theme state
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -198,11 +198,11 @@ export function VerifySignature() {
             {isConnected && accountId && networkId && (
               <div className="flex items-center gap-2">
                 <span className={`text-xs px-2 py-1 rounded ${
-                  isCorrectNetwork(networkId) 
+                  isCorrectNetwork(networkId || null, 2) 
                     ? "bg-emerald-500/10 text-emerald-400" 
                     : "bg-yellow-500/10 text-yellow-400"
                 }`}>
-                  {getNetworkName(networkId)}
+                  {getNetworkName(networkId || null)}
                 </span>
                 <span className="text-xs text-slate-600 dark:text-white/50">
                   {accountId.slice(0, 8)}...
