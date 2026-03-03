@@ -1,25 +1,53 @@
-export ledger required Uint
-export ledger current Uint
-export ledger done Bool
+// Midnight Network - Zero-Knowledge Document Signer
 
-constructor req Uint {
-    required = req
-    current = 0
-    done = false
+import CompactStandardLibrary;
+
+// =============================================================================
+// LEDGER STATE
+// =============================================================================
+
+export ledger document_hash: Bytes<32>;
+export ledger required_signers: u64;
+export ledger current_count: u64;
+export ledger is_executed: bool;
+
+// =============================================================================
+// CONSTRUCTOR
+// =============================================================================
+
+constructor(hash: Bytes<32>, required: u64) {
+    document_hash = hash;
+    required_signers = required;
+    current_count = 0;
+    is_executed = false;
 }
 
-export circuit sign {
-    assert done == false
-    current = current + 1
-    if current == required {
-        done = true
+// =============================================================================
+// IDENTITY
+// =============================================================================
+
+witness localSecretKey(): Bytes<32>;
+
+// =============================================================================
+// CORE SIGNING CIRCUIT
+// =============================================================================
+
+export circuit sign_document {
+    assert(is_executed == false);
+    current_count = current_count + 1;
+    if (current_count == required_signers) {
+        is_executed = true;
     }
 }
 
-export circuit getCurrent -> Uint {
-    return current
+// =============================================================================
+// QUERY FUNCTIONS
+// =============================================================================
+
+export circuit get_signature_count(): u64 {
+    return current_count;
 }
 
-export circuit isDone -> Bool {
-    return done
+export circuit get_is_executed(): bool {
+    return is_executed;
 }
