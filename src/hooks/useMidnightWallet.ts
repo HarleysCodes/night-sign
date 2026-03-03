@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
@@ -6,6 +6,9 @@ export const useMidnightWallet = () => {
   const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [networkId] = useState<number | null>(null);
+  
+  // Store the API reference for signing
+  const apiRef = useRef<any>(null);
 
   const connect = useCallback(async () => {
     setStatus("connecting");
@@ -23,7 +26,7 @@ export const useMidnightWallet = () => {
       
       let api;
       
-      // 1. Try all known connection methods dynamically
+      // Try all known connection methods dynamically
       if (typeof wallet.connect === 'function') {
         try {
           api = await wallet.connect('preprod');
@@ -50,7 +53,10 @@ export const useMidnightWallet = () => {
       
       if (!api) throw new Error("API object is null after connection.");
 
-      // 2. Try all known address retrieval methods
+      // Store API for later use (signing)
+      apiRef.current = api;
+
+      // Get addresses
       let addresses;
       if (typeof api.getShieldedAddresses === 'function') {
         addresses = await api.getShieldedAddresses();
@@ -61,7 +67,6 @@ export const useMidnightWallet = () => {
         throw new Error("No valid address function found on API.");
       }
 
-      // 3. Handle all known address return formats
       if (Array.isArray(addresses) && addresses.length > 0) {
         setAccountId(addresses[0]);
       } else if (addresses && addresses.shieldedAddress) {
@@ -81,6 +86,31 @@ export const useMidnightWallet = () => {
       alert("Connection Error: " + (error?.message || JSON.stringify(error)));
     }
   }, []);
+
+  // Real signing function - triggers Lace popup
+  const signData = useCallback(async (payload: string): Promise<string | null> => {
+    if (!apiRef.current || !accountId) {
+      alert("Wallet not connected. Please connect first.");
+      return null;
+    }
+
+    try {
+      // Use the wallet's signData method - this triggers the Lace popup!
+      if (typeof apiRef.current.signData === 'function') {
+        const signature = await apiRef.current.signData(accountId, payload);
+        return signature;
+      } else if (typeof apiRef.current.sign === 'function') {
+        const signature = await apiRef.current.sign(payload);
+        return signature;
+      } else {
+        throw new Error("No signing method available on wallet API");
+      }
+    } catch (error: any) {
+      console.error("Signing failed:", error);
+      alert("Signing Error: " + (error?.message || JSON.stringify(error)));
+      return null;
+    }
+  }, [accountId]);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -104,6 +134,7 @@ export const useMidnightWallet = () => {
     error,
     networkId,
     connect,
+    signData,
     clearError,
     getNetworkName,
     isCorrectNetwork

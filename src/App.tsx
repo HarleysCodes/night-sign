@@ -159,7 +159,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
-  const { isConnected, accountId, connect: connectWallet } = useMidnightWallet();
+  const { isConnected, accountId, connect: connectWallet, signData } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -286,7 +286,10 @@ function App() {
       }
       setInviteLink(linkWithParams);
       
-      let txHash = `zk_${Date.now()}_${randomHex(16)}`;
+      // Sign with real Midnight wallet - triggers Lace popup!
+      const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
+      let signature = await signData(payload);
+      let txHash = signature || `zk_${Date.now()}_${randomHex(16)}`;
       
       
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
@@ -327,7 +330,10 @@ function App() {
         setInviteLink(nextLink);
       }
       
-      let txHash = `zk_${Date.now()}_${randomHex(16)}`;
+      // Sign with real Midnight wallet - triggers Lace popup!
+      const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
+      let signature = await signData(payload);
+      let txHash = signature || `zk_${Date.now()}_${randomHex(16)}`;
       
       
       setSignedData({
