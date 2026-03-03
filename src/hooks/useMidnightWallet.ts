@@ -13,55 +13,69 @@ export const useMidnightWallet = () => {
     
     try {
       // @ts-ignore
-      if (typeof window === 'undefined' || !window.midnight) {
-        setStatus("error");
-        setError("Midnight wallet object not found.");
-        alert("Midnight wallet not detected! Please install the Lace extension.");
-        return;
-      }
+      if (typeof window === 'undefined' || !window.midnight) throw new Error("No window.midnight object");
 
       // @ts-ignore
       const providers = Object.values(window.midnight);
-      if (providers.length === 0) {
-        setStatus("error");
-        setError("No provider API found.");
-        return;
-      }
+      if (providers.length === 0) throw new Error("No providers found in window.midnight");
 
-      const walletProvider = providers[0] as any;
+      const wallet = providers[0] as any;
       
       let api;
-      try {
-        // The Midnight API REQUIRES a network string.
-        api = await walletProvider.connect('TestNet');
-      } catch (e1) {
+      
+      // 1. Try all known connection methods dynamically
+      if (typeof wallet.connect === 'function') {
         try {
-          api = await walletProvider.connect('preview');
-        } catch (e2) {
-          api = await walletProvider.connect('undeployed');
+          api = await wallet.connect('preview');
+        } catch (e1) {
+          try {
+            api = await wallet.connect('undeployed');
+          } catch (e2) {
+            try {
+              api = await wallet.connect('TestNet');
+            } catch (e3) {
+              throw new Error("All network connect() attempts rejected.");
+            }
+          }
         }
+      } else if (typeof wallet.enable === 'function') {
+        api = await wallet.enable();
+      } else {
+        api = wallet; // Fallback if wallet IS the api
       }
       
-      if (!api) {
-        alert("Wallet connection rejected. Check Lace network settings.");
-        return;
+      if (!api) throw new Error("API object is null after connection.");
+
+      // 2. Try all known address retrieval methods
+      let addresses;
+      if (typeof api.getShieldedAddresses === 'function') {
+        addresses = await api.getShieldedAddresses();
+      } else if (typeof api.state === 'function') {
+        const state = await api.state();
+        addresses = state.address;
+      } else {
+        throw new Error("No valid address function found on API.");
       }
 
-      // Midnight's shielded addresses are returned as an object, not an array
-      const addresses = await api.getShieldedAddresses();
-      
-      if (addresses && addresses.shieldedAddress) {
+      // 3. Handle all known address return formats
+      if (Array.isArray(addresses) && addresses.length > 0) {
+        setAccountId(addresses[0]);
+      } else if (addresses && addresses.shieldedAddress) {
         setAccountId(addresses.shieldedAddress);
-        setIsConnected(true);
-        setStatus("connected");
+      } else if (typeof addresses === 'string') {
+        setAccountId(addresses);
       } else {
-        setStatus("error");
-        setError("No addresses found");
+        throw new Error("Could not parse address format: " + JSON.stringify(addresses));
       }
-    } catch (err: any) {
+      
+      setIsConnected(true);
+      setStatus("connected");
+    } catch (error: any) {
+      console.error("Wallet connection failed:", error);
       setStatus("error");
-      setError(err.message || "Connection failed");
-      alert("Wallet connection rejected or failed.");
+      setError(error?.message || JSON.stringify(error));
+      // CRITICAL: Alert the exact error message to the screen
+      alert("Connection Error: " + (error?.message || JSON.stringify(error)));
     }
   }, []);
 
