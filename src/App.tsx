@@ -286,16 +286,25 @@ function App() {
       }
       setInviteLink(linkWithParams);
       
-      // Sign with real Midnight wallet - triggers Lace popup!
+      // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      let signature = await signData(payload);
-      let txHash = signature || `zk_${Date.now()}_${randomHex(16)}`;
+      const signature = await signData(payload);
       
+      // IMPORTANT: Only advance if signing succeeded
+      if (!signature) {
+        alert("Signing failed or was rejected. Please try again.");
+        setState("upload");
+        return;
+      }
       
+      const txHash = signature;
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
       setState("signed");
-    } catch (error) { setState("upload"); }
+    } catch (error) { 
+      console.error("Signing error:", error);
+      setState("upload"); 
+    }
   }, [selectedFile, isConnected, connectWallet, accountId,  multiSignerSession, requiredSigners, currentSignerCount]);
 
   const handleSecondSignerSign = useCallback(async () => {
