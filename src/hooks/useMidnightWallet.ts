@@ -13,15 +13,29 @@ export const useMidnightWallet = () => {
     
     try {
       // @ts-ignore
-      if (typeof window === 'undefined' || !window.midnight || !window.midnight.mnl) {
+      if (typeof window === 'undefined' || !window.midnight) {
         setStatus("error");
-        setError("Midnight Lace wallet extension not detected!");
-        alert("Midnight Lace wallet extension not detected! Please install and unlock it.");
+        setError("Midnight wallet object not found on window.");
+        alert("Midnight wallet not detected! Please install the Lace extension.");
         return;
       }
 
       // @ts-ignore
-      const api = await window.midnight.mnl.enable();
+      const providers = Object.values(window.midnight);
+      if (providers.length === 0) {
+        setStatus("error");
+        setError("Midnight wallet found, but no provider API is injected.");
+        alert("Midnight wallet found, but no provider API is injected.");
+        return;
+      }
+
+      // Grab the first available injected provider dynamically
+      const walletProvider = providers[0] as any;
+      
+      // Trigger the Lace popup
+      const api = await walletProvider.enable();
+      
+      // Fetch the address
       const addresses = await api.state?.getUsedAddresses() || await api.getUsedAddresses();
       
       if (addresses && addresses.length > 0) {
