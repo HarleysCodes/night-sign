@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "file": "index.js",
-  "sourceRoot": "../../../../",
-  "sources": ["src/docusign.compact"],
-  "names": [],
-  "mappings": ";;;;;;;;;;;;;EAAA;;;;;;;;;;MAEA,AAAA,YAGC;;OAAA;;;GAAC;EALF;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GAKE;EAHF,AAAA,eAGC,CAH2B,cAAuB,EAAE,UAAmB,gBAGvE;;;;;;;;;;;;;;;;;;;;;;;EAHD,AAAA,YAGC;;;;UAH2B,cAAuB;UAAE,UAAmB;;;;;;;;;;;;;;;0CAA5C,cAAuB,EAAE,UAAmB;GAGvE;;;;"
-}

@@ -1,7 +1,5 @@
 // Midnight Network - Zero-Knowledge Document Signer
 
-import CompactStandardLibrary;
-
 // =============================================================================
 // LEDGER STATE
 // =============================================================================
@@ -23,18 +21,17 @@ constructor(hash: Bytes<32>, required: u64) {
 }
 
 // =============================================================================
-// IDENTITY
-// =============================================================================
-
-witness localSecretKey(): Bytes<32>;
-
-// =============================================================================
 // CORE SIGNING CIRCUIT
 // =============================================================================
 
-export circuit sign_document {
-    assert(is_executed == false);
+export circuit sign_document(docId: Bytes<32>): [] {
+    // Check not executed
+    if (is_executed) { 
+        assert(false); 
+    }
+    // Increment
     current_count = current_count + 1;
+    // Check completion
     if (current_count == required_signers) {
         is_executed = true;
     }
