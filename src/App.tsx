@@ -287,15 +287,13 @@ function App() {
       setInviteLink(linkWithParams);
       
       let txHash = `zk_${Date.now()}_${randomHex(16)}`;
-      if (signDocument) {
-        try { const txResult = await signDocument(documentHash, new Uint8Array()); txHash = txResult?.txHash || txHash; } catch (e) {}
-      }
+      
       
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
       setState("signed");
     } catch (error) { setState("upload"); }
-  }, [selectedFile, isConnected, connectWallet, accountId, signDocument, multiSignerSession, requiredSigners, currentSignerCount]);
+  }, [selectedFile, isConnected, connectWallet, accountId,  multiSignerSession, requiredSigners, currentSignerCount]);
 
   const handleSecondSignerSign = useCallback(async () => {
     if (!isConnected) { await connectWallet(); return; }
@@ -330,9 +328,7 @@ function App() {
       }
       
       let txHash = `zk_${Date.now()}_${randomHex(16)}`;
-      if (signDocument) {
-        try { const txResult = await signDocument(documentHash, new Uint8Array()); txHash = txResult?.txHash || txHash; } catch (e) {}
-      }
+      
       
       setSignedData({
         documentHash,
@@ -347,7 +343,7 @@ function App() {
       });
       setState("signed");
     } catch (error) { setState("second-sign"); }
-  }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, signDocument, currentSignerCount]);
+  }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, currentSignerCount]);
 
   const handleCopyLink = () => { navigator.clipboard.writeText(inviteLink); setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000); };
   const canSign = (isConnected || multiSignerSession?.isSecondSigner) && selectedFile && (state !== "signed");
