@@ -159,7 +159,7 @@ function TrustTimeline({ currentStep, requiredSigners = 2 }: any) {
 }
 
 function App() {
-  const { isConnected, accountId, connect: connectWallet, submitTransaction } = useMidnightWallet();
+  const { isConnected, accountId, connect: connectWallet, walletProviders } = useMidnightWallet();
   const [state, setState] = useState<AppState>("upload");
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -294,16 +294,13 @@ function App() {
       
       // Use .enable() to wake up the wallet - industry standard
       // @ts-ignore
-      // Look for Preview version of the wallet
-      const midnight = (window as any).midnight;
-      const wallet = midnight?.lacePreview || midnight?.lace;
-      if (!wallet) {
-        throw new Error("Midnight Preview Wallet not found. Please ensure the PREVIEW extension is installed.");
+      // Use providers from connected wallet state
+      if (!walletProviders) {
+        throw new Error("Please connect wallet first");
       }
-      const instance = await wallet.enable();
-      const providers = await instance.getProviders();
+      const providers = walletProviders;
       // @ts-ignore  
-      const contract = new createProof({}, providers, { proofServerUrl: 'http://localhost:6300' });
+      const contract = new createProof({}, walletProviders, { proofServerUrl: 'http://localhost:6300' });
       // @ts-ignore
       await contract.circuits.sign_document(targetHash);
       

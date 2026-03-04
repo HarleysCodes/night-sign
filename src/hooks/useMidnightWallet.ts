@@ -6,6 +6,7 @@ export const useMidnightWallet = () => {
   const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [networkId] = useState<number | null>(null);
+  const [walletProviders, setWalletProviders] = useState<any>(null);
   const apiRef = useRef<any>(null);
 
   const connect = useCallback(async () => {
@@ -49,6 +50,7 @@ export const useMidnightWallet = () => {
       else if (typeof addresses === 'string') setAccountId(addresses);
       else throw new Error("Could not parse address: " + JSON.stringify(addresses));
       
+      setWalletProviders(providers);
       setIsConnected(true);
       setStatus("connected");
     } catch (err: any) {
@@ -76,7 +78,7 @@ export const useMidnightWallet = () => {
 
   const isCorrectNetwork = useCallback((id: number | null, expected: number) => id === expected, []);
 
-  return { 
+  return { walletProviders,
     accountId, isConnected, status, error, networkId, 
     connect, submitTransaction, clearError, getNetworkName, isCorrectNetwork 
   };
