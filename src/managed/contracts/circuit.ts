@@ -29,8 +29,7 @@ export const VERIFICATION_KEY = {
   ]
 };
 
-export function createProof(// @ts-ignore
-  documentHash: string, signerId: string): SignDocumentProof {
+export function createProof(documentHash: string, signerId: string): SignDocumentProof {
   // In production, this calls the proof server to generate real ZK proof
   // For demo, returning mock proof
   return {
