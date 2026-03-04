@@ -292,10 +292,11 @@ function App() {
       setState("proving");
       const targetHash = String(documentHash || docId);
       
-      // Get wallet providers and instantiate contract
+      // Wait for lace wallet and get providers
       // @ts-ignore
-      const walletProviders = await window.midnight.lace.getProviders();
-      const providers = walletProviders[0];
+      const lace = await window.midnight?.lace;
+      if (!lace) throw new Error("Lace wallet not found");
+      const providers = await lace.getProviders();
       // @ts-ignore  
       const contract = new createProof({}, providers);
       // @ts-ignore
