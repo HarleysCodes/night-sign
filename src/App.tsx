@@ -300,7 +300,7 @@ function App() {
       }
       const providers = walletProviders;
       // @ts-ignore  
-      const contract = new createProof({}, walletProviders, { proofServerUrl: 'http://localhost:6300' });
+      const contract = new DocumentSignerContract(walletProviders, { proofServerUrl: 'http://localhost:6300' });
       // @ts-ignore
       await contract.circuits.sign_document(targetHash);
       
