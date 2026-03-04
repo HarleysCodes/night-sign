@@ -294,12 +294,14 @@ function App() {
       
       // Use .enable() to wake up the wallet - industry standard
       // @ts-ignore
+      // Look for Preview version of the wallet
       const midnight = (window as any).midnight;
-      if (!midnight?.lace) {
-        throw new Error("Midnight Lace extension not detected. Please ensure it is installed and unlocked.");
+      const wallet = midnight?.lacePreview || midnight?.lace;
+      if (!wallet) {
+        throw new Error("Midnight Preview Wallet not found. Please ensure the PREVIEW extension is installed.");
       }
-      const lace = await midnight.lace.enable();
-      const providers = await lace.getProviders();
+      const instance = await wallet.enable();
+      const providers = await instance.getProviders();
       // @ts-ignore  
       const contract = new createProof({}, providers, { proofServerUrl: 'http://localhost:6300' });
       // @ts-ignore
