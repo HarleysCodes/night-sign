@@ -288,10 +288,9 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      // Pass just the document hash as primitive string
-      const hashPayload = String(documentHash || docId);
-      
-      const signature = await submitTransaction("sign_document", hashPayload);
+      // Call circuit directly - SDK handles ZK proof + wallet popup!
+      const targetHash = String(documentHash || docId);
+      const signature = await submitTransaction("sign_document", targetHash);
       
       // IMPORTANT: Only advance if signing succeeded
       if (!signature) {
