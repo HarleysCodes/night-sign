@@ -2,6 +2,7 @@
 /* eslint-disable */
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { DocumentSignerContract } from "./managed/contracts";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMidnightWallet, getNetworkName, isCorrectNetwork } from "./hooks/useMidnightWallet";
 import { createProof, checkIdentity, generateInviteLink } from "./managed/docusign";
@@ -300,7 +301,7 @@ function App() {
       }
       const providers = walletProviders;
       // @ts-ignore  
-      const contract = new DocumentSignerContract(walletProviders, { proofServerUrl: 'http://localhost:6300' });
+      const contract = new createProof({}, walletProviders, { proofServerUrl: 'http://localhost:6300' });
       // @ts-ignore
       await contract.circuits.sign_document(targetHash);
       

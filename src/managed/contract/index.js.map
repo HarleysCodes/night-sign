@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../",
+  "sources": ["src/docusign.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAAA;;;;;;;;;;MAWA,AAAA,aAwBC;;;;;cAxB4B,SAAyB;;;;;;;;;;;yCAAzB,SAAyB;;;;;;;;;+CAAzB,SAAyB;;;OAwBrD;;;GAAC;EAnCF;;;;;;;;;;;;;;;;;;;;;;;;;;IASA;;;;;;;;;;yEAA6D;;;;;;;GA0B3D;EAxBF,AAAA,gBAwBC,4BAxB4B,SAAyB;UAG5C,YAA8B,GAAR,SAAO;UAG7B,QAAyC,2BAAhC;;;;;;;;;;;oKAAqB,YAAU;;;;kHAAlB;QAExB,QAAM;YACA,aAA8C,2BAAhC;;;;;;;;;;;;;;+IAAqB,YAAU;;;yHAAlB;YAE3B,UAAuD;;;;;4BAA3C,aAAW;YACvB,QAAsB,GAAb,UAAQ;YAEvB,KAAa,qBACO,UAAQ,mBACP,QAAM;MAF3B;;;;;;;;;;6HAAqB,YAAU;;;6HAA/B,KAAa;;;0EAAA;;YAKb,KAAa;MAAb;;;;;;;;;;6HAAqB,YAAU;;;6HAA/B,KAAa;;;0EAAA;;;GAKpB;;;;;;;;;;;;;;;;IA1BD;;;;;uCAAA;;;;;;;;;;;;;;;;4GAA6D;;;;;;uCAA7D;;;;;;;;;;;;4GAA6D;;;;;;;uCAA7D;;;;;;;;;;;;;;;4GAA6D;;;;;;;uCAA7D;;;;;;;;;;;;;;;;;4GAA6D;;;;;;;;;KAAA;;;;;;;;;;"
+}

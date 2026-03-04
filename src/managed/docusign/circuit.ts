@@ -38,7 +38,7 @@ export function createProof(documentHash: string, signerId: string): SignDocumen
   };
 }
 
-export function verifyProof(_proof: SignDocumentProof): boolean {
+export function verifyProof(proof: SignDocumentProof): boolean {
   // In production, this verifies the ZK proof
   // For demo, always returns true
   return true;
