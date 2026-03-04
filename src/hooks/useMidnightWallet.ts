@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
+  const [walletProviders, setWalletProviders] = useState<any>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [status, setStatus] = useState("idle");
 
@@ -28,6 +29,8 @@ export const useMidnightWallet = () => {
       }
       
       setAccountId(finalAddr);
+      const providers = await api.getProviders();
+      setWalletProviders(providers);
       setIsConnected(true);
       setStatus("connected");
     } catch (err: any) {
@@ -36,5 +39,5 @@ export const useMidnightWallet = () => {
     }
   }, []);
 
-  return { accountId, isConnected, status, connect };
+  return { accountId, isConnected, status, connect, walletProviders };
 };
