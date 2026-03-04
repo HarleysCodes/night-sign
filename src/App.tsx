@@ -292,10 +292,13 @@ function App() {
       setState("proving");
       const targetHash = String(documentHash || docId);
       
-      // Wait for lace wallet and get providers
+      // Use .enable() to wake up the wallet - industry standard
       // @ts-ignore
-      const lace = await window.midnight?.lace;
-      if (!lace) throw new Error("Lace wallet not found");
+      const midnight = (window as any).midnight;
+      if (!midnight?.lace) {
+        throw new Error("Midnight Lace extension not detected. Please ensure it is installed and unlocked.");
+      }
+      const lace = await midnight.lace.enable();
       const providers = await lace.getProviders();
       // @ts-ignore  
       const contract = new createProof({}, providers);
