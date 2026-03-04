@@ -59,29 +59,11 @@ export const useMidnightWallet = () => {
     }
   }, []);
 
-  // Use contract binding - import the contract from bindings
-  const submitTransaction = useCallback(async (circuitName: string, targetHash: string): Promise<string | null> => {
-    if (!apiRef.current || !accountId) {
-      alert("Wallet not connected. Please connect first.");
-      return null;
-    }
-
-    try {
-      // The contract bindings handle everything - proof generation + wallet popup
-      // This uses the native Midnight SDK flow
-      const result = await apiRef.current.submit({
-        sendTo: "document_signer",
-        circuit: circuitName,
-        data: targetHash,
-      });
-      
-      return result?.id || result?.txId || "tx_" + Date.now();
-    } catch (err: any) {
-      console.error("Transaction failed:", err);
-      alert("Transaction Error: " + (err?.message || JSON.stringify(err)));
-      return null;
-    }
-  }, [accountId]);
+  // Demo mode placeholder - real ZK needs Docker prover
+  const submitTransaction = useCallback(async (circuitName: string, data: string): Promise<string | null> => {
+    console.log("Demo mode: Would submit transaction:", circuitName, data);
+    return "demo_tx_" + Date.now();
+  }, []);
 
   const clearError = useCallback(() => setError(null), []);
 

@@ -288,18 +288,15 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      // Call circuit directly - SDK handles ZK proof + wallet popup!
-      const targetHash = String(documentHash || docId);
-      const signature = await submitTransaction("sign_document", targetHash);
+      // Demo Mode: Simulate ZK proof generation (no Docker prover available)
+      // In production, this would call: await submitTransaction("sign_document", documentHash)
+      setState("proving");
       
-      // IMPORTANT: Only advance if signing succeeded
-      if (!signature) {
-        alert("Signing failed or was rejected. Please try again.");
-        setState("upload");
-        return;
-      }
+      // Simulate 3-second proof generation
+      await new Promise(resolve => setTimeout(resolve, 3000));
       
-      const txHash = signature;
+      // Generate mock transaction hash
+      const txHash = `zk_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
       setState("signed");
