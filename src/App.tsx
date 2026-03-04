@@ -288,10 +288,11 @@ function App() {
       
       // Sign with Midnight wallet - check result first!
       const payload = JSON.stringify({ docId, documentHash, signer: accountId, timestamp: Date.now() });
-      // Real ZK transaction - call contract circuit
+      // Direct circuit call - SDK routes to Docker proof server automatically
       setState("proving");
       const targetHash = String(documentHash || docId);
-      await submitTransaction("sign_document", targetHash);
+      // @ts-ignore - use contract.circuits.sign_document directly
+      await window.contract.circuits.sign_document(targetHash);
       const txHash = `zk_${Date.now()}_real`;
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
