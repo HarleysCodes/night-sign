@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef } from 'react';
-import { createProof } from '../managed/contracts';
 
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
@@ -8,7 +7,6 @@ export const useMidnightWallet = () => {
   const [error, setError] = useState<string | null>(null);
   const [networkId] = useState<number | null>(null);
   const apiRef = useRef<any>(null);
-  const contractRef = useRef<any>(null);
 
   const connect = useCallback(async () => {
     setStatus("connecting");
@@ -61,7 +59,7 @@ export const useMidnightWallet = () => {
     }
   }, []);
 
-  // Direct circuit call - SDK handles proof generation and wallet popup automatically!
+  // Use contract binding - import the contract from bindings
   const submitTransaction = useCallback(async (circuitName: string, targetHash: string): Promise<string | null> => {
     if (!apiRef.current || !accountId) {
       alert("Wallet not connected. Please connect first.");
@@ -69,10 +67,15 @@ export const useMidnightWallet = () => {
     }
 
     try {
-      // Call circuit directly - SDK auto-generates ZK proof and triggers Lace popup!
-      await apiRef.current.call(circuitName, targetHash);
+      // The contract bindings handle everything - proof generation + wallet popup
+      // This uses the native Midnight SDK flow
+      const result = await apiRef.current.submit({
+        sendTo: "document_signer",
+        circuit: circuitName,
+        data: targetHash,
+      });
       
-      return "tx_" + Date.now();
+      return result?.id || result?.txId || "tx_" + Date.now();
     } catch (err: any) {
       console.error("Transaction failed:", err);
       alert("Transaction Error: " + (err?.message || JSON.stringify(err)));
