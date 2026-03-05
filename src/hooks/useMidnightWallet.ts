@@ -23,31 +23,31 @@ export const useMidnightWallet = () => {
   const connect = useCallback(async () => {
     setStatus("connecting");
     try {
-      // CRITICAL: Check window.midnight exists first to prevent crash
+      // Check window.midnight exists first
       const midnight = (window as any).midnight;
       
-      if (!midnight || typeof midnight === 'undefined') {
-        throw new Error("Midnight wallet not detected. Please install Midnight Lace extension.");
+      if (!midnight) {
+        throw new Error("Midnight wallet not detected. Please install Midnight Lace.");
       }
 
       // v4.0.0: Access via window.midnight.mnLace
       const mnLace = midnight.mnLace;
       
-      if (!mnLace || typeof mnLace === 'undefined') {
-        throw new Error("Midnight Lace (mnLace) not found. Please ensure the v4.0.0 extension is installed.");
+      if (!mnLace) {
+        throw new Error("Midnight Lace not found. Please ensure the extension is installed.");
       }
 
-      // Connect using the new unified method
+      // Connect using v4.0.0 method
       const api = await mnLace.connect('preprod');
       
-      if (!api || typeof api === 'undefined') {
-        throw new Error("Wallet connection failed. Please unlock your wallet and try again.");
+      if (!api) {
+        throw new Error("Wallet refused connection.");
       }
 
       // Get providers
       const providers = await api.getProviders();
       if (!providers) {
-        throw new Error("Failed to retrieve wallet providers.");
+        throw new Error("Failed to get wallet providers.");
       }
 
       // Get Bech32m address (un1... format)
@@ -63,9 +63,9 @@ export const useMidnightWallet = () => {
         finalAddr = shieldedAddrs.shieldedAddress;
       }
       
-      // Validate Bech32m format (un1...)
+      // Validate Bech32m format
       if (finalAddr && !finalAddr.startsWith('un1') && !finalAddr.startsWith('mid')) {
-        console.warn("Address may not be in standard Bech32m format:", finalAddr);
+        console.warn("Address not in standard Bech32m format:", finalAddr);
       }
       
       setAccountId(finalAddr);
@@ -73,20 +73,16 @@ export const useMidnightWallet = () => {
       setIsConnected(true);
       setStatus("connected");
     } catch (err: any) {
-      console.error("Wallet connection error:", err);
+      console.error("Connection failed:", err);
+      const msg = (err?.message || '').toLowerCase();
       
-      const errorMsg = (err?.message || '').toLowerCase();
-      
-      if (errorMsg.includes('rejected') || errorMsg.includes('cancelled') || errorMsg.includes('user')) {
+      if (msg.includes('rejected') || msg.includes('cancelled')) {
         setStatus("rejected");
-      } else if (errorMsg.includes('lock')) {
+      } else if (msg.includes('lock')) {
         setStatus("locked");
-      } else if (errorMsg.includes('not detected') || errorMsg.includes('not found') || errorMsg.includes('not installed')) {
-        setStatus("not-installed");
       } else {
         setStatus("error");
       }
-      
       throw err;
     }
   }, []);
