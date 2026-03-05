@@ -180,6 +180,7 @@ function App() {
   const [inviteLink, setInviteLink] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentRole, setCurrentRole] = useState("Signer");
+  const [isGeneratingProof, setIsGeneratingProof] = useState(false);
   const [autoLoaded, setAutoLoaded] = useState(false);
     const [isFetchingDoc, setIsFetchingDoc] = useState(false);
 
@@ -211,7 +212,8 @@ function App() {
     const handleIPFS = async () => {
       setIsFetchingDoc(true);
       if (ipfsCid && sessionKey && fileName) {
-        setState("proving"); // Use proving as loading state
+        setState("proving");
+      setIsGeneratingProof(true); // Use proving as loading state
         try {
           const encryptedBlob = await fetchFromIPFS(ipfsCid);
           const decryptedFile = await decryptFile(encryptedBlob, sessionKey, decodeURIComponent(fileName));
@@ -258,7 +260,8 @@ function App() {
     try {
       const identityResult = await checkIdentity(accountId || "");
       if (!identityResult.isVerified) throw new Error("Identity verification failed");
-    } catch (error) { setState("upload"); return; }
+    } catch (error) { setIsGeneratingProof(false);
+      setState("upload"); return; }
     
     setState("proving");
     try {
@@ -303,11 +306,12 @@ function App() {
       // @ts-ignore  
       const contract = new createProof({}, walletProviders, { proofServerUrl: 'http://localhost:6300' });
       // @ts-ignore
-      await contract.circuits.sign_document(targetHash);
+      await contract.circuits.sign_document(targetHash, { role: currentRole });
       
       const txHash = `zk_${Date.now()}_real`;
       setSignedData({ documentHash, documentName: selectedFile.name, txHash, signerId: accountId || "zk", timestamp: Date.now(), docId, signatureCount: 1, isFullyExecuted: requiredSigners === 1 });
       setCurrentSignerCount(prev => prev + 1);
+      setIsGeneratingProof(false);
       setState("signed");
     } catch (error) { 
       console.error("Signing error:", error);
@@ -425,7 +429,7 @@ function App() {
                   ) : !selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
                       <p className="text-lg font-medium text-white">{selectedFile.name}</p>
-                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={!canSign} className="neon-button w-full mt-4">Sign Document</button>
+                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={!canSign} className="neon-button w-full mt-4">{isGeneratingProof ? "Generating ZK-Proof..." : "Sign Document"}</button>
                     </div>
                   )}
                 </motion.div>
