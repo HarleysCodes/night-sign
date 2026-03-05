@@ -419,9 +419,9 @@ function App() {
 
           <motion.div layout className="glass-card p-8" onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={(e) => { e.preventDefault(); setIsDragging(false); const file = e.dataTransfer.files[0]; if (file) setSelectedFile(file); }}>
             <AnimatePresence mode="wait">
-              {state === "upload" && currentSignerCount === 0 && (
+              {state === "upload" && (currentSignerCount === 0 || currentSignerCount < requiredSigners) && (
                 <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  {currentSignerCount > 0 && !selectedFile ? (
+                  {false && currentSignerCount > 0 && !selectedFile ? (
                     <div className="animate-pulse text-gray-400 p-8 text-center border border-gray-800 rounded-lg">
                       <div className="text-lg mb-2">🔓 Decrypting document from IPFS...</div>
                       <div className="text-sm text-gray-600">Please wait while we fetch the private boardroom document</div>
