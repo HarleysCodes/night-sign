@@ -24,35 +24,13 @@ export class DocumentSignerContract {
       sign_document: async (docHash: string, options?: { role?: string }) => {
         console.log("Executing circuit sign_document with:", docHash, "role:", options?.role);
         
-        // In production: POST to proof server for ZK proof generation
-        if (this.params.proofServerUrl) {
-          try {
-            const response = await fetch(`${this.params.proofServerUrl}/prove`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                circuit: 'sign_document',
-                documentHash: docHash,
-                // Role is disclosed in the circuit (v0.28.0 standard)
-                role: options?.role || 'Signer'
-              })
-            });
-            if (response.ok) {
-              return await response.json();
-            }
-          } catch (e) {
-            console.warn('Proof server unavailable, using local generation');
-          }
-        }
-        
-        // Local proof generation (demo mode)
+        // Local proof generation (demo mode - no proof server needed)
         const encoder = new TextEncoder();
         const role = options?.role || 'Signer';
         
         return {
-          proof: encoder.encode(docHash + role),
+          proof: encoder.encode(docHash + role + Date.now()),
           publicSignals: [docHash],
-          // disclose() equivalent - role revealed on-chain
           metadata: { role, disclosed: true }
         };
       }
@@ -70,7 +48,7 @@ export async function createProof(documentHash: string, signer: string, docId?: 
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   return {
-    proof: encoder.encode(documentHash + signer + (role || '')),
+    proof: encoder.encode(documentHash + signer + (role || '') + Date.now()),
     publicSignals: [documentHash, docId || '']
   };
 }
