@@ -373,7 +373,7 @@ function App() {
   }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, currentSignerCount]);
 
   const handleCopyLink = () => { navigator.clipboard.writeText(inviteLink); setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000); };
-  const canSign = (isConnected || multiSignerSession?.isSecondSigner) && selectedFile && (state !== "signed");
+  const canSign = selectedFile && (state !== "signed");
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
@@ -429,7 +429,7 @@ function App() {
                   ) : !selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
                       <p className="text-lg font-medium text-white">{selectedFile.name}</p>
-                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={!canSign} className="neon-button w-full mt-4">{isGeneratingProof ? "Generating ZK-Proof..." : "Sign Document"}</button>
+                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={!selectedFile} className="neon-button w-full mt-4">{isGeneratingProof ? "Generating ZK-Proof..." : "Sign Document"}</button>
                     </div>
                   )}
                 </motion.div>
