@@ -13,7 +13,7 @@ export const isCorrectNetwork = (id: number | null, expected: number = 2): boole
   return id === expected;
 };
 
-// v4.0.0 DApp Connector - window.midnight.mnLace
+// v4.0.0 DApp Connector - Flexible wallet detection
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -23,49 +23,96 @@ export const useMidnightWallet = () => {
   const connect = useCallback(async () => {
     setStatus("connecting");
     try {
-      // Check window.midnight exists first
       const midnight = (window as any).midnight;
       
       if (!midnight) {
-        throw new Error("Midnight wallet not detected. Please install Midnight Lace.");
+        throw new Error("Midnight wallet not detected. Please install Midnight Lace extension.");
       }
 
-      // v4.0.0: Access via window.midnight.mnLace
-      const mnLace = midnight.mnLace;
+      // Try multiple patterns to find the wallet
+      let wallet = null;
+      let walletName = "";
       
-      if (!mnLace) {
-        throw new Error("Midnight Lace not found. Please ensure the extension is installed.");
+      // Pattern 1: window.midnight.mnLace (v4.0.0)
+      if (midnight.mnLace) {
+        wallet = midnight.mnLace;
+        walletName = "mnLace";
+      }
+      // Pattern 2: window.midnight.lace (legacy)
+      else if (midnight.lace) {
+        wallet = midnight.lace;
+        walletName = "lace";
+      }
+      // Pattern 3: window.lace (direct)
+      else if ((window as any).lace) {
+        wallet = (window as any).lace;
+        walletName = "window.lace";
+      }
+      // Pattern 4: Any value in midnight object
+      else if (typeof midnight === 'object') {
+        const values = Object.values(midnight);
+        if (values.length > 0) {
+          wallet = values[0];
+          walletName = "midnight[0]";
+        }
+      }
+      
+      if (!wallet) {
+        throw new Error("Midnight Lace not found. Please ensure the extension is installed and unlocked.");
       }
 
-      // Connect using v4.0.0 method
-      const api = await mnLace.connect('preprod');
+      console.log("Detected wallet via:", walletName);
+
+      // Connect - try both patterns
+      let api = null;
+      try {
+        // Try .connect() first
+        api = await wallet.connect('preprod');
+      } catch (e) {
+        // Try .enable() as fallback
+        try {
+          api = await wallet.enable();
+        } catch (e2) {
+          throw new Error("Wallet connection failed. Please unlock your wallet and try again.");
+        }
+      }
       
       if (!api) {
         throw new Error("Wallet refused connection.");
       }
 
       // Get providers
-      const providers = await api.getProviders();
+      let providers = null;
+      try {
+        providers = await api.getProviders();
+      } catch (e) {
+        providers = api.providers; // Some APIs expose providers directly
+      }
+      
       if (!providers) {
-        throw new Error("Failed to get wallet providers.");
+        console.warn("Could not get providers, continuing anyway");
       }
 
-      // Get Bech32m address (un1... format)
-      const shieldedAddrs = await api.getShieldedAddresses();
+      // Get address
       let finalAddr = "";
-      
-      if (Array.isArray(shieldedAddrs)) {
-        const first = shieldedAddrs[0];
-        finalAddr = typeof first === 'string' ? first : (first?.address || first?.shieldedAddress || "");
-      } else if (shieldedAddrs?.address) {
-        finalAddr = shieldedAddrs.address;
-      } else if (shieldedAddrs?.shieldedAddress) {
-        finalAddr = shieldedAddrs.shieldedAddress;
+      try {
+        const shieldedAddrs = await api.getShieldedAddresses();
+        
+        if (Array.isArray(shieldedAddrs)) {
+          const first = shieldedAddrs[0];
+          finalAddr = typeof first === 'string' ? first : (first?.address || first?.shieldedAddress || "");
+        } else if (shieldedAddrs?.address) {
+          finalAddr = shieldedAddrs.address;
+        } else if (shieldedAddrs?.shieldedAddress) {
+          finalAddr = shieldedAddrs.shieldedAddress;
+        }
+      } catch (e) {
+        console.warn("Could not get addresses:", e);
       }
       
       // Validate Bech32m format
       if (finalAddr && !finalAddr.startsWith('un1') && !finalAddr.startsWith('mid')) {
-        console.warn("Address not in standard Bech32m format:", finalAddr);
+        console.log("Address format:", finalAddr.substring(0, 10) + "...");
       }
       
       setAccountId(finalAddr);
