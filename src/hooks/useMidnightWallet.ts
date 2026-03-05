@@ -13,7 +13,7 @@ export const isCorrectNetwork = (id: number | null, expected: number = 2): boole
   return id === expected;
 };
 
-// v4.0.0 DApp Connector API - Unified window.midnight provider
+// v4.0.0 DApp Connector - Unified window.midnight provider
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -23,72 +23,54 @@ export const useMidnightWallet = () => {
   const connect = useCallback(async () => {
     setStatus("connecting");
     try {
-      // v4.0.0 DApp Connector: Use window.midnight unified provider
+      // v4.0.0 Unified Provider: window.midnight
       const midnight = (window as any).midnight;
       
       if (!midnight) {
-        throw new Error("Midnight wallet not detected. Please install Midnight Lace extension.");
+        throw new Error("Midnight wallet not detected. Please install Midnight Lace.");
       }
 
-      // Unified API: midnight.enable() returns the wallet API directly
-      const api = await midnight.enable?.();
+      // Use unified enable() - this is the v4.0.0 standard
+      const api = await midnight.enable();
+      
       if (!api) {
-        // Fallback: try legacy lace pattern
-        const lace = midnight.lace?.() || midnight.lacePreview?.();
-        if (lace) {
-          const legacyApi = await lace.enable?.() || await lace.connect?.();
-          if (legacyApi) {
-            await setupConnection(legacyApi);
-            return;
-          }
-        }
         throw new Error("Wallet refused connection.");
       }
 
-      await setupConnection(api);
+      // Get providers from the enabled API
+      const providers = await api.getProviders();
+      if (!providers) {
+        throw new Error("Failed to get wallet providers.");
+      }
+
+      // Get Bech32m address (un1... format)
+      const shieldedAddrs = await api.getShieldedAddresses();
+      let finalAddr = "";
+      
+      if (Array.isArray(shieldedAddrs)) {
+        const first = shieldedAddrs[0];
+        finalAddr = typeof first === 'string' ? first : (first?.address || first?.shieldedAddress || "");
+      } else if (shieldedAddrs?.address) {
+        finalAddr = shieldedAddrs.address;
+      } else if (shieldedAddrs?.shieldedAddress) {
+        finalAddr = shieldedAddrs.shieldedAddress;
+      }
+      
+      // Validate Bech32m format
+      if (finalAddr && !finalAddr.startsWith('un1') && !finalAddr.startsWith('mid')) {
+        console.warn("Address may not be in Bech32m format:", finalAddr);
+      }
+      
+      setAccountId(finalAddr);
+      setWalletProviders(providers);
+      setIsConnected(true);
+      setStatus("connected");
     } catch (err: any) {
       console.error("Connection failed:", err);
       setStatus("error");
       throw err;
     }
   }, []);
-
-  const setupConnection = async (api: any) => {
-    // Get providers
-    const providers = await api.getProviders?.() || await api.getProviders();
-    if (!providers) {
-      throw new Error("Failed to get wallet providers.");
-    }
-
-    // Get Bech32m address (un1... format)
-    const shieldedAddrs = await api.getShieldedAddresses?.() || await api.getShieldedAddresses?.('default');
-    let finalAddr = "";
-    
-    if (Array.isArray(shieldedAddrs)) {
-      const first = shieldedAddrs[0];
-      if (typeof first === 'string') {
-        finalAddr = first;
-      } else if (first?.address) {
-        finalAddr = first.address;
-      } else if (first?.shieldedAddress) {
-        finalAddr = first.shieldedAddress;
-      }
-    } else if (shieldedAddrs?.address) {
-      finalAddr = shieldedAddrs.address;
-    } else if (shieldedAddrs?.shieldedAddress) {
-      finalAddr = shieldedAddrs.shieldedAddress;
-    }
-    
-    // Validate Bech32m format (un1...)
-    if (finalAddr && !finalAddr.startsWith('un1') && !finalAddr.startsWith('mid')) {
-      console.warn("Address may not be in Bech32m format:", finalAddr);
-    }
-    
-    setAccountId(finalAddr);
-    setWalletProviders(providers);
-    setIsConnected(true);
-    setStatus("connected");
-  };
 
   return { 
     accountId, 
