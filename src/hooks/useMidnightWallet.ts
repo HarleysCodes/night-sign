@@ -13,7 +13,7 @@ export const isCorrectNetwork = (id: number | null, expected: number = 2): boole
   return id === expected;
 };
 
-// v4.0.0 DApp Connector - Unified window.midnight provider
+// v4.0.0 DApp Connector - Use window.midnight.mnLace
 export const useMidnightWallet = () => {
   const [accountId, setAccountId] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -23,21 +23,28 @@ export const useMidnightWallet = () => {
   const connect = useCallback(async () => {
     setStatus("connecting");
     try {
-      // v4.0.0 Unified Provider: window.midnight
+      // v4.0.0: Use window.midnight.mnLace
       const midnight = (window as any).midnight;
       
       if (!midnight) {
         throw new Error("Midnight wallet not detected. Please install Midnight Lace.");
       }
 
-      // Use unified enable() - this is the v4.0.0 standard
-      const api = await midnight.enable();
+      // Access mnLace (v4.0.0 API)
+      const mnLace = midnight.mnLace || midnight.lace;
+      if (!mnLace) {
+        throw new Error("Midnight Lace not found. Please ensure the extension is installed.");
+      }
+
+      // Connect with network specification
+      const network = 'preprod'; // or 'preview' for testnet
+      const api = await mnLace.connect(network);
       
       if (!api) {
         throw new Error("Wallet refused connection.");
       }
 
-      // Get providers from the enabled API
+      // Get providers
       const providers = await api.getProviders();
       if (!providers) {
         throw new Error("Failed to get wallet providers.");
@@ -67,8 +74,23 @@ export const useMidnightWallet = () => {
       setStatus("connected");
     } catch (err: any) {
       console.error("Connection failed:", err);
-      setStatus("error");
-      throw err;
+      
+      // Handle specific error states
+      const errorMsg = err?.message?.toLowerCase() || '';
+      
+      if (errorMsg.includes('rejected') || errorMsg.includes('user cancelled')) {
+        setStatus("rejected");
+        throw new Error("Connection rejected. Please approve in the wallet.");
+      } else if (errorMsg.includes('locked')) {
+        setStatus("locked");
+        throw new Error("Wallet is locked. Please unlock and try again.");
+      } else if (errorMsg.includes('not detected') || errorMsg.includes('not found')) {
+        setStatus("not-installed");
+        throw err;
+      } else {
+        setStatus("error");
+        throw err;
+      }
     }
   }, []);
 
