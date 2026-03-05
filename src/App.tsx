@@ -373,7 +373,8 @@ function App() {
   }, [isConnected, connectWallet, accountId, selectedFile, multiSignerSession, currentSignerCount]);
 
   const handleCopyLink = () => { navigator.clipboard.writeText(inviteLink); setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000); };
-  const canSign = selectedFile && (state !== "signed");
+  // Force show UI if wallet is connected
+  const canSign = (isConnected || accountId) && (state !== "signed");
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
@@ -419,7 +420,8 @@ function App() {
 
           <motion.div layout className="glass-card p-8" onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={(e) => { e.preventDefault(); setIsDragging(false); const file = e.dataTransfer.files[0]; if (file) setSelectedFile(file); }}>
             <AnimatePresence mode="wait">
-              {state === "upload" && (currentSignerCount === 0 || currentSignerCount < requiredSigners) && (
+              {/* No gate - show upload immediately if connected */}
+              {(state === "upload" || !signedData) && (
                 <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                   {false && currentSignerCount > 0 && !selectedFile ? (
                     <div className="animate-pulse text-gray-400 p-8 text-center border border-gray-800 rounded-lg">
