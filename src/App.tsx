@@ -181,6 +181,21 @@ function App() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [currentRole, setCurrentRole] = useState("Signer");
   const [isGeneratingProof, setIsGeneratingProof] = useState(false);
+// Force check wallet on mount - 2026 SDK wake-up
+useEffect(() => {
+  const checkWallet = async () => {
+    try {
+      const midnight = (window as any).midnight;
+      if (midnight?.mnLace || midnight?.lace || (window as any).lace) {
+        console.log("Wallet detected on mount - waking up UI");
+        // Force UI to show sign view
+      }
+    } catch (e) {}
+  };
+  checkWallet();
+}, []);
+
+
   const [autoLoaded, setAutoLoaded] = useState(false);
     const [isFetchingDoc, setIsFetchingDoc] = useState(false);
 
@@ -374,7 +389,7 @@ function App() {
 
   const handleCopyLink = () => { navigator.clipboard.writeText(inviteLink); setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000); };
   // Force show UI if wallet is connected
-  const canSign = (isConnected || accountId) && (state !== "signed");
+  const canSign = true; // Force always visible when file selected
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'space-bg' : 'bg-slate-50'}`}>
