@@ -445,7 +445,7 @@ useEffect(() => {
                   ) : !selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <div className="text-center">
                       <p className="text-lg font-medium text-white">{selectedFile.name}</p>
-                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={false} className="neon-button w-full mt-4">{isGeneratingProof ? "Generating ZK-Proof..." : "Sign Document"}</button>
+                      <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} disabled={false} className="neon-button w-full mt-4" style={{ opacity: 1, pointerEvents: "auto" }}>{isGeneratingProof ? "Generating ZK-Proof..." : "Sign Document"}</button>
                     </div>
                   )}
                 </motion.div>
@@ -469,7 +469,7 @@ useEffect(() => {
                   )}
                   {!selectedFile ? <FileDropzone onFileSelect={setSelectedFile} isDragging={isDragging} /> : (
                     <>
-                    <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} className="neon-button w-full">Append Signature</button>
+                    <div className="mt-4 mb-4 text-left"><label className="block text-xs font-medium text-white/70 mb-1 ml-1">Your Legal Role / Title</label><input type="text" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g., Buyer, CEO, Witness" className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" /></div><button onClick={(e) => { e.preventDefault(); handleSign(); }} className="neon-button w-full" style={{ opacity: 1, pointerEvents: "auto" }}>Append Signature</button>
                     </>
                   )}
                 </motion.div>
