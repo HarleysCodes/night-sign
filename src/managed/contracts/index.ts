@@ -24,14 +24,44 @@ export class DocumentSignerContract {
       sign_document: async (docHash: string, options?: { role?: string }) => {
         console.log("Executing circuit sign_document with:", docHash, "role:", options?.role);
         
-        // Local proof generation (demo mode - no proof server needed)
-        const encoder = new TextEncoder();
         const role = options?.role || 'Signer';
         
+        // Try proof server first
+        if (this.params.proofServerUrl) {
+          try {
+            const response = await fetch(`${this.params.proofServerUrl}/prove`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                circuitId: 'docusign.signDocument',
+                input: {
+                  documentHash: docHash,
+                  signerRole: role
+                }
+              })
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              console.log("Proof server success:", data);
+              return {
+                proof: new TextEncoder().encode(JSON.stringify(data.proof || {})),
+                publicSignals: data.publicSignals || [docHash]
+              };
+            } else {
+              console.warn("Proof server returned:", response.status, await response.text());
+            }
+          } catch (e) {
+            console.warn("Proof server error:", e);
+          }
+        }
+        
+        // Fallback: local mock proof
+        const encoder = new TextEncoder();
         return {
           proof: encoder.encode(docHash + role + Date.now()),
           publicSignals: [docHash],
-          metadata: { role, disclosed: true }
+          metadata: { role, disclosed: true, mock: true }
         };
       }
     };
