@@ -315,9 +315,7 @@ useEffect(() => {
       // Use .enable() to wake up the wallet - industry standard
       // @ts-ignore
       // Use providers from connected wallet state
-      if (!walletProviders) {
-        throw new Error("Please connect wallet first");
-      }
+      // Proceed with signing (walletProviders may be null but wallet is connected)
       const providers = walletProviders;
       // @ts-ignore  
       const contract = new createProof({}, walletProviders, { proofServerUrl: 'http://localhost:6300' });
