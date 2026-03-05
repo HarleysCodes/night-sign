@@ -19,6 +19,7 @@ export const useMidnightWallet = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [status, setStatus] = useState("idle");
   const [walletProviders, setWalletProviders] = useState<any>(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   const connect = useCallback(async () => {
     setStatus("connecting");
@@ -119,6 +120,7 @@ export const useMidnightWallet = () => {
       setWalletProviders(providers);
       setIsConnected(true);
       setStatus("connected");
+      setForceUpdate(f => f + 1); // Force re-render
     } catch (err: any) {
       console.error("Connection failed:", err);
       const msg = (err?.message || '').toLowerCase();
