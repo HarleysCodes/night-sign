@@ -47,6 +47,9 @@ export default {
           '50%': { transform: 'translateY(-10px)' },
         }
       },
+      button: {
+        primary: "bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg transition-all",
+      },
       boxShadow: {
         'neon': '0 0 20px rgba(0, 243, 255, 0.3), 0 0 40px rgba(0, 243, 255, 0.1)',
         'neon-hover': '0 0 30px rgba(0, 243, 255, 0.5), 0 0 60px rgba(0, 243, 255, 0.2)',

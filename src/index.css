@@ -29,3 +29,20 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(6, 182, 212, 0.5);
 }
+/* Neon button - always visible */
+.neon-button {
+  background: #06b6d4 !important;
+  color: black !important;
+  font-weight: 700 !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.neon-button:hover {
+  background: #22d3ee !important;
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5) !important;
+}
