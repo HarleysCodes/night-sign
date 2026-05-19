@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "precompact:nightsign": "bash scripts/check-compactc.sh",
+    "compact:nightsign": "compact compile +$(cat .compactc-version) --skip-zk contract-src/night_sign.compact src/managed/night_sign",
+    "compact:nightsign:zk": "compact compile +$(cat .compactc-version) contract-src/night_sign.compact src/managed/night_sign",
+    "test:circuit": "node --test contract-src/night_sign.test.mjs"
   },
   "dependencies": {
     "@midnight-ntwrk/compact-js": "2.4.3",
