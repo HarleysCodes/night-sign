@@ -1,0 +1,97 @@
+pragma language_version >= 0.16 && < 0.23;
+
+import CompactStandardLibrary;
+
+// =====================================================================
+// NightSign — ZK Document Signing
+//
+// Off-chain SHA-256 of the document, on-chain ZK attestation of intent
+// to sign. The document itself never reaches the ledger; signers are
+// hidden behind a persistentHash-derived public key.
+//
+// See: NightSign/ARCHITECTURE.md §2.1 for the spec this implements.
+// =====================================================================
+
+// ---- Ledger state ---------------------------------------------------
+
+// Sealed at deployment: the SHA-256 of the document being signed.
+export ledger document_hash: Bytes<32>;
+
+// Sealed at deployment: how many distinct signers are required to
+// flip is_executed.
+export ledger required_signers: Uint<64>;
+
+// Monotonic count of accepted signatures.
+export ledger signature_count: Counter;
+
+// Latched true once signature_count >= required_signers. Prevents
+// further signatures (see sign_document pre-condition).
+export ledger is_executed: Boolean;
+
+// Nullifier set of public keys that have already signed. Prevents a
+// single secret from signing twice.
+export ledger signers_set: Set<Bytes<32>>;
+
+// ---- Constructor ----------------------------------------------------
+
+// Seals document_hash and required_signers at deployment, per
+// ARCHITECTURE.md §2.1 ("Deployment Locking"). disclose() lifts
+// constructor inputs (which are public deployment parameters) into
+// the private-by-default ledger fields.
+constructor(doc_hash: Bytes<32>, signers: Uint<64>) {
+  document_hash = disclose(doc_hash);
+  required_signers = disclose(signers);
+}
+
+// ---- Witnesses (private inputs, supplied by the Prover) -------------
+
+// The signer's secret. Never leaves the user's device; the circuit
+// only consumes it to derive the public key.
+witness signer_secret(): Bytes<32>;
+
+// ---- Pure helpers ---------------------------------------------------
+
+// Public key derivation via persistentHash with a domain separator.
+// persistentHash is the established Midnight pattern (NOT a builtin
+// primitive — it's the standard-library hash specialised over a typed
+// vector). The "ns:pk:v1" tag prevents cross-protocol collisions if
+// the same secret is ever reused elsewhere.
+circuit compute_public_key(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>(
+    [pad(32, "ns:pk:v1"), secret]
+  );
+}
+
+// ---- Main circuit ---------------------------------------------------
+
+// sign_document
+//   doc_id — the SHA-256 of the document the signer believes they are
+//            attesting to. Must equal the sealed document_hash.
+//
+// Steps mirror ARCHITECTURE.md §2.1:
+//   1. Pre-condition: not yet executed.
+//   2. Identity:      derive pk from witnessed secret.
+//   3. Integrity:     submitted doc_id matches sealed hash.
+//   4. Uniqueness:    pk not already in nullifier set.
+//   5. State update:  insert pk, bump counter, latch is_executed.
+export circuit sign_document(doc_id: Bytes<32>): [] {
+  assert(!is_executed, "NightSign: document already executed");
+
+  const secret = signer_secret();
+  const pk = compute_public_key(secret);
+
+  assert(doc_id == document_hash, "NightSign: document hash mismatch");
+
+  // disclose(pk) reveals the derived public key to the verifier so it
+  // can be checked against / inserted into the nullifier set. The
+  // secret itself remains hidden — only the hash is disclosed.
+  assert(!signers_set.member(disclose(pk)),
+    "NightSign: this key has already signed");
+
+  signers_set.insert(disclose(pk));
+  signature_count.increment(1);
+
+  if (signature_count >= required_signers) {
+    is_executed = true;
+  }
+}

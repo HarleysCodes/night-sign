@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../../",
+  "sources": ["contract-src/night_sign.compact", "compiler/standard-library.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAwCA;;;;;;;;;;;;;MAoCA,AAAA,aAoBC;;;;;cApB4B,QAAiB;;;;;;;;;;;;;;;;;;yCAAjB,QAAiB;;;;;;;;;+CAAjB,QAAiB;;;OAoB7C;;;;GArDA;EAHD;;;;;UAAY,UAAmB;UAAE,SAAiB;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAvBlD;;;;;;;;;yEAAuC;IAIvC;;;;;;;;;yEAAyC;IAGzC;;;;;;;;;yEAAuC;IAIvC;;;;;;;;;yEAAmC;IAInC;;;;;;;;;;yEAA0C;IASxC;;;;;;;2HAAyB,UAAQ;;yEAApB;IACb;;;;;;;2HAA4B,SAAO;;yEAAnB;;;;;;;GACjB;EC3CD,AAAA,kBAAA;oEAAA;;;EDiDA,AAAA,gBAAmC;;0DAAnC,aAAmC;;;;;;;;;;;;;;GAAA;EASnC,AAAA,qBAIC,CAJ0B,QAAiB;;mCAElB,QAAM;GAE/B;EAcD,AAAA,gBAoBC,4BApB4B,QAAiB;qDACpC;;;;;;;;;;;0HAAW;;UAEb,QAAwB;UACxB,IAA+B,8BAAP,QAAM;0CAE7B,QAAM;kEAAI;;;;;;;;;;;uIAAa;;qDAKtB;;;;;;;;;;;4KAA4B,IAAE;;;;0HAAnB;;IAGnB;;;;;;;;;;2HAA4B,IAAE;;;;;wEAAnB;UACX,KAAe;IAAf;;;;;;;;;;6FAAA,KAAe;;;;wEAAA;QAEX,GAAmC;sCAAnC;;;;;;;;;;;2GAAe;QAAf,GAAmC;;gCAAhB;;;;;;;;;;;qGAAgB;;MACrC;;;;;;;;;2EAAW;;;GAEd;;;;;;;;;;;;;;;;;;;;IA/ED;qCAAA;;;;;;;;;;;0GAAuC;KAAA;IAIvC;qCAAA;;;;;;;;;;;0GAAyC;KAAA;IAGzC;qCAAA;;;;;;;;;;;0GAAuC;KAAA;IAIvC;qCAAA;;;;;;;;;;;0GAAmC;KAAA;IAInC;;;;;uCAAA;;;;;;;;;;;;;;;;4GAA0C;;;;;;uCAA1C;;;;;;;;;;;;4GAA0C;;;;;;;;;;;;;;uCAA1C;;;;;;;;;;;;;;;4GAA0C;;;;;;;;;KAAA;;;;;;;;;;"
+}
