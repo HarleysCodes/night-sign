@@ -1,0 +1,30 @@
+name: Circuit tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-circuit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The new circuit's compiled bindings target compact-runtime 0.15.0;
+      # package.json still pins 0.14.0. Override with --no-save to run tests
+      # without changing the lockfile. Remove this step once the runtime
+      # bump PR lands.
+      - name: Pin compact-runtime to 0.15.0 (workaround)
+        run: npm install --no-save @midnight-ntwrk/compact-runtime@0.15.0
+
+      - name: Run circuit tests
+        run: node --test contract-src/night_sign.test.mjs
